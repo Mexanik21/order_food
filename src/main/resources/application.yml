@@ -1,0 +1,28 @@
+server:
+  port: 1234
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/order_food
+    username: postgres
+    password: 12025202
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        temp:
+          use_jdbc_metadata_defaults: false
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    hibernate:
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl
+      ddl-auto: update
+
+telegram:
+    admin: -1001532538433
+    chanel: -100776853235
+    chanel-link: 'https://t.me/shodiyors_channel'
+    bot-username: 'foodorder22_bot'
+    bot-token: '5785016052:AAFEuvZF78-rCPR5AeqZLWSvSNGhs2FwwDc'
