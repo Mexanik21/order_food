@@ -1,14 +1,13 @@
 package com.example.order_food.enums
 enum class LocalizationTextKey {
     //----------BUTTON TEXT (START)-----------
-    ENTER_PHONE_NUMBER,
-    BACK_BUTTON ,
+    ENTER_CONTACT_BUTTON,
     ORDER_BUTTON,
-
     ABOUT_US_BUTTON,
-
     SETTINGS_BUTTON,
-    LOCATION_BUTTON,
+    ADD_LOCATION_BUTTON,
+    PANNIER_BUTTON,
+    BACK_BUTTON,
 
 
     //----------BUTTON TEXT (END)-----------
@@ -16,13 +15,9 @@ enum class LocalizationTextKey {
 
     // ----------MESSAGE TEXT (START)-----------
     CHOOSE_LANGUAGE_MESSAGE,
+    INPUT_CONTACT_MESSAGE,
+    INPUT_MENU_MESSAGE
 
-    ENTER_PHONE_MESSAGE,
-    ENTER_FULL_NAME_MESSAGE,
-    ENTER_SMS_CODE_MESSAGE,
-    MENU_MESSAGE,
-    ABOUT_US_MESSAGE,
-    SETTINGS_MESSAGE
 
     // ----------MESSAGE TEXT (END)-----------
 

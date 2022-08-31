@@ -22,4 +22,17 @@ object MarkupButtons {
         board.keyboard = listOf(row)
         return board
     }
+
+    fun myLocation():ReplyKeyboard{
+        val board=ReplyKeyboardMarkup()
+        val location=KeyboardButton("Location")
+        location.requestLocation=true
+        val row = KeyboardRow()
+        row.add(location)
+        board.resizeKeyboard =true
+        board.keyboard= listOf(row)
+
+
+         return board
+    }
 }

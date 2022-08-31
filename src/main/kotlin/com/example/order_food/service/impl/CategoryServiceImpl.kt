@@ -2,8 +2,6 @@ package com.example.order_food.service.impl
 
 import com.example.order_food.Entity.Category
 import com.example.order_food.dtos.CategoryCreateDto
-
-import com.example.order_food.dtos.GetCategoryDto
 import com.example.order_food.repository.CategoryRepository
 import com.example.order_food.service.CategoryService
 import org.springframework.stereotype.Service
@@ -36,6 +34,10 @@ class CategoryServiceImpl (
 
         return categoryRepository.getCategory()
 
+    }
+
+    override fun getSubCategory(name:String): MutableList<String> {
+       return categoryRepository.getSubCategory(name)
     }
 
 

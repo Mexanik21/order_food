@@ -1,5 +1,5 @@
 package com.example.order_food.service
-
+import org.springframework.context.annotation.Lazy
 import com.example.order_food.enums.LocalizationTextKey
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.context.support.ResourceBundleMessageSource
@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class MessageSourceService(@org.springframework.context.annotation.Lazy val messageResourceBundleMessageSource: ResourceBundleMessageSource) {
+class MessageSourceService(@Lazy val messageResourceBundleMessageSource: ResourceBundleMessageSource) {
 
     fun getMessage(sourceKey: LocalizationTextKey): String {
         return messageResourceBundleMessageSource.getMessage(

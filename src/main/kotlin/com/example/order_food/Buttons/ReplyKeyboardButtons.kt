@@ -1,30 +1,15 @@
 package com.example.order_food.Buttons
 
 
-import com.example.order_food.ConstUZ
-import com.example.order_food.service.impl.CategoryServiceImpl
-import com.example.order_food.service.impl.UserServiceImpl
+import com.example.order_food.enums.LocalizationTextKey
+import com.example.order_food.service.MessageSourceService
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow
-import java.util.*
 
-class ReplyKeyboardButtons {
+object ReplyKeyboardButtons {
     private val board = ReplyKeyboardMarkup()
-
-    fun backKeyboard(name:String): ReplyKeyboard? {
-        val row = KeyboardRow()
-        val next = KeyboardButton(name)
-        row.add(next)
-        board.selective = true
-        board.resizeKeyboard = true
-        board.keyboard = Arrays.asList(row)
-        board.resizeKeyboard = true
-        board.selective = true
-        return board
-    }
-
     fun MenuKeyboard(orderT:String,contactUsT:String,settingsT:String,locationT:String ): ReplyKeyboard? {
         val row1 = KeyboardRow()
         val row2 = KeyboardRow()
@@ -51,15 +36,15 @@ class ReplyKeyboardButtons {
 
 
 
-    fun CategoryKeyboard(categoryServiceImpl: CategoryServiceImpl):ReplyKeyboard{
+    fun categoryKeyboard(categoryList:MutableList<String>,messageSourceService:MessageSourceService):ReplyKeyboard{
         val first = KeyboardRow()
-        val back = KeyboardButton(ConstUZ.BACK_BUTTON)
+        val back = KeyboardButton(messageSourceService.getMessage(LocalizationTextKey.BACK_BUTTON))
         first.add(back)
-        val pannier = KeyboardButton(ConstUZ.PANNIER_BUTTON)
+        val pannier = KeyboardButton(messageSourceService.getMessage(LocalizationTextKey.PANNIER_BUTTON))
         first.add(pannier)
 
         val line= arrayListOf(first)
-        val categoryList=categoryServiceImpl.getCategory()
+
 
         for(i in categoryList ){
 
@@ -88,7 +73,9 @@ class ReplyKeyboardButtons {
 
 
     }
-//
+
+
+
 //    fun FoodCategoryKeyboard():ReplyKeyboard{
 //
 //    }

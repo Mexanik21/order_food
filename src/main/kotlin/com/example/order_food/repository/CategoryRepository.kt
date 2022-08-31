@@ -11,5 +11,10 @@ interface CategoryRepository :BaseRepository<Category>  {
      fun getCategory():MutableList<String>
 
 
+ @Query("select c.name from category c where (select ca.id from category as ca where ca.name=:name) = c.parent_id", nativeQuery = true)
+ fun  getSubCategory(name:String):MutableList<String>
+
+
+
 
 }
