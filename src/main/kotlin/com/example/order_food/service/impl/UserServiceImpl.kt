@@ -44,6 +44,16 @@ class UserServiceImpl(
 
     }
 
+    override fun update(user: User): User {
+        var u = userRepository.findById(user.id!!).orElseThrow{Exception("")}
+
+        user.lang.let { u.lang = it }
+        user.cache.let { u.cache = it }
+
+        return userRepository.save(user)
+
+    }
+
     override fun setStep(chatId: String, step: Step) {
         val user = userRepository.findByTelegramId(chatId)
         user.step = step

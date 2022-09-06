@@ -6,4 +6,5 @@ import com.example.order_food.dtos.FoodCreateDto
 interface  FoodService {
 
     fun createFood(dto: FoodCreateDto)
+    fun getFoods(categoryName:String):MutableList<String>
 }

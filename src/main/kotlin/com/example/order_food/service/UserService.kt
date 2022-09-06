@@ -10,4 +10,5 @@ interface UserService {
     fun setLang(chatId: String,lang:Language)
     fun setStep(chatId: String,step: Step)
     fun getStep(chatId: String):Step
+    fun update(user:User):User
 }

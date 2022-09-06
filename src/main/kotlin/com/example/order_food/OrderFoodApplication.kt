@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 @EnableConfigurationProperties
 @EnableJpaAuditing
 @EnableJpaRepositories(repositoryBaseClass = BaseRepositoryImpl::class)
-class OrderFoodApplication
+private class OrderFoodApplication
 
 fun main(args: Array<String>) {
     runApplication<OrderFoodApplication>(*args)

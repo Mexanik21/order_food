@@ -15,7 +15,7 @@ import kotlin.streams.toList
 
 object InlineKeyboardButtons {
     private val board = InlineKeyboardMarkup()
-    fun LanguageInlineKeyboard(): ReplyKeyboard? {
+    fun languageInlineKeyboard(): ReplyKeyboard? {
         val uz = InlineKeyboardButton(Language.UZ.text)
         uz.callbackData = "${CallbackType.UZ}"
         val ru = InlineKeyboardButton(Language.RU.text)

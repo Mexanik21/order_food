@@ -9,5 +9,6 @@ interface  CategoryService {
 
     fun createCategory(dto:CategoryCreateDto):Long
     fun getCategory():MutableList<String>
-    fun getSubCategory(name:String):MutableList<String>
+    fun getSubCategory(name:String):MutableList<String>?
+    fun getLastCategory(name: String):MutableList<String>?
 }

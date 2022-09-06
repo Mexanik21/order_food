@@ -13,6 +13,7 @@ class User(
     @Column(length = 48, unique = true) var telegramId: String,
     @Enumerated(EnumType.STRING) var role: Role = Role.USER,
     @Enumerated(EnumType.STRING) var step: Step = Step.START,
+    var cache:String? = null,
     @Enumerated(EnumType.STRING) var  lang: Language = Language.UZ,
     @Column(length = 24, unique = true) var username: String? = null,
     @Column(length = 128) var fullName: String? = null,

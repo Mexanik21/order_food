@@ -1,5 +1,5 @@
 server:
-  port: 1234
+  port: 1420
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
@@ -25,4 +25,4 @@ telegram:
     chanel: -100776853235
     chanel-link: 'https://t.me/shodiyors_channel'
     bot-username: 'foodorder22_bot'
-    bot-token: '5785016052:AAFEuvZF78-rCPR5AeqZLWSvSNGhs2FwwDc'
+    bot-token: '5785016052:AAGJ_y6uYbDnLMOyXpidUGt53dhm08Z_L5c'
