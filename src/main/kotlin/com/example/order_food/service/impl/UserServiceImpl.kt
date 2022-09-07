@@ -49,40 +49,37 @@ class UserServiceImpl(
     override fun create(userCreateDto: UserCreateDto) {
 
         userCreateDto.let {
-            userRepository.save(User(
-                it.telegramId,
-                it.role,
-                it.step,
-                it.lang,
-                it.username,
-                it.fullName,
-                it.phoneNumber,
-                myPasswordEncoder.passwordEncoder()!!.encode(it.password)
-            ))
+            userRepository.save(
+                User(
+                    it.telegramId,
+                    it.role,
+                    it.step,
+                    it.lang,
+                    it.username,
+                    it.fullName,
+                    it.phoneNumber,
+                    null,
+                    myPasswordEncoder.passwordEncoder()!!.encode(it.password)
+                )
+            )
         }
     }
 
-
-
     override fun update(user: User): User {
-        var u = userRepository.findById(user.id!!).orElseThrow{Exception("")}
+        var u = userRepository.findById(user.id!!).orElseThrow { Exception("") }
 
         user.lang.let { u.lang = it }
         user.cache.let { u.cache = it }
 
         return userRepository.save(user)
-
     }
+
 
     override fun setStep(chatId: String, step: Step) {
         val user = userRepository.findByTelegramId(chatId)
         user.step = step
         userRepository.save(user)
     }
-
-
-
-
 
 
 }
