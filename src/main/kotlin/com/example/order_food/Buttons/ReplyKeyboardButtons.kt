@@ -27,26 +27,6 @@ object ReplyKeyboardButtons {
         return board
     }
 
-    fun enuKeyboard(orderT: String, contactUsT: String, settingsT: String, locationT: String): ReplyKeyboard {
-        val row1 = KeyboardRow()
-        val row2 = KeyboardRow()
-        val row3 = KeyboardRow()
-        val order = KeyboardButton(orderT)
-        row1.add(order)
-        val contactUs = KeyboardButton(contactUsT)
-        row2.add(contactUs)
-        val settings = KeyboardButton(settingsT)
-        row2.add(settings)
-        val location = KeyboardButton(locationT)
-        row3.add(location)
-
-        board.selective = true
-        board.resizeKeyboard = true
-        board.keyboard = listOf(row1, row2, row3)
-        board.resizeKeyboard = true
-        board.selective = true
-        return board
-    }
 
 
     fun categoryKeyboard(categoryList: MutableList<String>, messageSourceService: MessageSourceService): ReplyKeyboard {

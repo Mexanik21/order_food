@@ -19,8 +19,8 @@ class OrderItemServiceImpl(
 ) : OrderItemService {
     override fun create(dto: OrderItemCreateDto) {
         dto.apply { orderItemRepository.save(OrderItem(
-            orderRepository.findById(orderId).orElseThrow(),
-            foodRepository.findById(foodId).orElseThrow(),
+            orderRepository.findById(orderId).orElseThrow{Exception()},
+            foodRepository.findById(foodId).orElseThrow{Exception()},
             count)) }
     }
 
@@ -33,8 +33,8 @@ class OrderItemServiceImpl(
     override fun update(id: Long, dto: OrderItemUpdateDto) {
         val orderItem = orderItemRepository.findById(id).orElseThrow { Exception("OrderItem not found this id = $id") }
         dto.apply {
-            orderId.let { orderItem.order = orderRepository.findById(orderId).orElseThrow() }
-            foodId.let { orderItem.food = foodRepository.findById(foodId).orElseThrow() }
+            orderId.let { orderItem.order = orderRepository.findById(orderId).orElseThrow{Exception()} }
+            foodId.let { orderItem.food = foodRepository.findById(foodId).orElseThrow{Exception()} }
             count.let { orderItem.count = it }
         }
         orderItemRepository.save(orderItem)

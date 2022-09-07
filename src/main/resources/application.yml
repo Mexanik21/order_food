@@ -5,7 +5,7 @@ spring:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/order_food
     username: postgres
-    password: 123
+    password: 12025202
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     properties:
@@ -24,5 +24,5 @@ telegram:
     admin: -1001532538433
     chanel: -100776853235
     chanel-link: 'https://t.me/shodiyors_channel'
-    bot-username: 'KayoSupportBot'
-    bot-token: '5494048456:AAHm7-APSn5zASCqIc8hxxQHQonTG9sinZk'
+    bot-username: 'foodorder22_bot'
+    bot-token: '5785016052:AAGJ_y6uYbDnLMOyXpidUGt53dhm08Z_L5c'

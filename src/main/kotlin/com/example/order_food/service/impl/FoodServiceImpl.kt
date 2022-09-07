@@ -47,7 +47,7 @@ class FoodServiceImpl(
             price.let { food.price = it }
             category.let { food.category = it }
             status.let { food.status  = it }
-            fileId.let { food.file = fileRepository.findById(fileId).orElseThrow() }
+            fileId.let { food.file = fileRepository.findById(fileId).orElseThrow{Exception()} }
         }
         foodRepository.save(food)
     }

@@ -17,7 +17,7 @@ class OrderServiceImpl(
     override fun create(dto: OrderCreateDto) {
         dto.apply {
             orderRepository.save(Order(
-                userRepository.findById(userId).orElseThrow(),
+                userRepository.findById(userId).orElseThrow{Exception()},
                 address,
                 phoneNumber,
                 status))
@@ -35,7 +35,7 @@ class OrderServiceImpl(
 
         dto.apply {
 
-           userId.let { order.user = userRepository.findById(userId).orElseThrow() }
+           userId.let { order.user = userRepository.findById(userId).orElseThrow{Exception()} }
            address.let { order.address = it }
            phoneNumber.let { order.phoneNumber = it }
         }

@@ -107,12 +107,21 @@ class MessageHandler(
                                         user.cache=null
                                         userServiceImpl.update(user)
                                         sendMessage.text = text
-                                        sendMessage.replyMarkup = ReplyKeyboardButtons.enuKeyboard(
-                                            messageSourceService.getMessage(LocalizationTextKey.ORDER_BUTTON),
-                                            messageSourceService.getMessage(LocalizationTextKey.ABOUT_US_BUTTON),
-                                            messageSourceService.getMessage(LocalizationTextKey.SETTINGS_BUTTON),
-                                            messageSourceService.getMessage(LocalizationTextKey.ADD_LOCATION_BUTTON)
-                                        )
+                                        sendMessage.replyMarkup = ReplyKeyboardButtons.menuKeyboard(
+                                            arrayOf(
+                                                messageSourceService.getMessage(LocalizationTextKey.ORDER_BUTTON),
+
+                                                ),
+                                            arrayOf(
+                                                messageSourceService.getMessage(LocalizationTextKey.ABOUT_US_BUTTON),
+                                                messageSourceService.getMessage(LocalizationTextKey.SETTINGS_BUTTON)
+                                            ),
+                                            arrayOf(
+
+                                                messageSourceService.getMessage(LocalizationTextKey.ADD_LOCATION_BUTTON)
+                                            ),
+
+                                            )
                                         sender.execute(sendMessage)
                                     }
                                 }
