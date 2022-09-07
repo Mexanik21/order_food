@@ -78,32 +78,20 @@ object ReplyKeyboardButtons {
     }
 
 
+    fun countFoodCategory(vararg rows: Array<String>):ReplyKeyboard {
 
-
-
-
-
-
-
-
-
-
-    //        for (i in categoryList) {
-//
-//
-//            if (categoryList.indexOf(i) == categoryList.size - 1 && categoryList.indexOf(i) % 2 == 0) {
-//                val row = KeyboardRow()
-//                row.add(KeyboardButton(i))
-//                line.add(row)
-//            } else if (categoryList.indexOf(i) % 2 == 0) {
-//                val row = KeyboardRow()
-//                row.add(KeyboardButton(i))
-//                row.add(KeyboardButton(categoryList[categoryList.indexOf(i) + 1]))
-//                line.add(row)
-//
-//            } else if (categoryList.indexOf(i) == categoryList.size - 1) {
-//                break
-//            }
-//        }
-
+        board.keyboard = mutableListOf()
+        rows.forEach {
+            val row = KeyboardRow()
+            it.forEach { item ->
+                row.add(item)
+            }
+            board.keyboard.add(row)
+        }
+        board.selective = true
+        board.resizeKeyboard = true
+        board.resizeKeyboard = true
+        board.selective = true
+        return board
+    }
 }

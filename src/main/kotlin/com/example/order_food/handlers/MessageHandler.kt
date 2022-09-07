@@ -3,13 +3,14 @@ package com.example.order_food.handlers
 import com.example.order_food.Buttons.InlineKeyboardButtons
 import com.example.order_food.Buttons.ReplyKeyboardButtons
 import com.example.order_food.enums.LocalizationTextKey
-import com.example.order_food.enums.LocalizationTextKey.*
-import com.example.order_food.enums.Step.*
+import com.example.order_food.enums.Step
 import com.example.order_food.repository.CategoryRepository
+import com.example.order_food.repository.FoodRepository
 import com.example.order_food.service.MessageSourceService
 import com.example.order_food.service.impl.CategoryServiceImpl
 import com.example.order_food.service.impl.FoodServiceImpl
 import com.example.order_food.service.impl.UserServiceImpl
+
 import org.springframework.stereotype.Service
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
 import org.telegram.telegrambots.meta.api.objects.Message
@@ -22,7 +23,8 @@ class MessageHandler(
     private val messageSourceService: MessageSourceService,
     private val categoryServiceImpl: CategoryServiceImpl,
     private val foodServiceImpl: FoodServiceImpl,
-    private val categoryRepository: CategoryRepository
+    private val categoryRepository: CategoryRepository,
+    private val foodRepository: FoodRepository
 
 ) {
 
@@ -40,33 +42,33 @@ class MessageHandler(
 
             when (text) {
                 "/start" -> {
-                    if (step == START) {
-                        sendMessage.text = messageSourceService.getMessage(CHOOSE_LANGUAGE_MESSAGE)
+                    if (step == Step.START) {
+                        sendMessage.text = messageSourceService.getMessage(LocalizationTextKey.CHOOSE_LANGUAGE_MESSAGE)
                         sendMessage.replyMarkup = InlineKeyboardButtons.languageInlineKeyboard()
                         sender.execute(sendMessage)
-                        userServiceImpl.setStep(chatId, LANG)
+                        userServiceImpl.setStep(chatId, Step.LANG)
 
                     } else {
-                        sendMessage.text = messageSourceService.getMessage(INPUT_MENU_MESSAGE)
+                        sendMessage.text = messageSourceService.getMessage(LocalizationTextKey.INPUT_MENU_MESSAGE)
                         ReplyKeyboardButtons.menuKeyboard(
                             arrayOf(
                                 messageSourceService.getMessage(LocalizationTextKey.ORDER_BUTTON),
-                                messageSourceService.getMessage(ABOUT_US_BUTTON),
+                                messageSourceService.getMessage(LocalizationTextKey.ABOUT_US_BUTTON),
                             ),
                             arrayOf(
-                                messageSourceService.getMessage(SETTINGS_BUTTON),
-                                messageSourceService.getMessage(ADD_LOCATION_BUTTON)
+                                messageSourceService.getMessage(LocalizationTextKey.SETTINGS_BUTTON),
+                                messageSourceService.getMessage(LocalizationTextKey.ADD_LOCATION_BUTTON)
                             ),
                         )
                         sender.execute(sendMessage)
-                        userServiceImpl.setStep(chatId, MENU)
+                        userServiceImpl.setStep(chatId, Step.MENU)
                     }
 
 
                 }
                 else -> {
                     when (step) {
-                        MENU -> {
+                        Step.MENU -> {
                             if (text == messageSourceService.getMessage(LocalizationTextKey.ORDER_BUTTON)) {
                                 sendMessage.text = text
                                 sendMessage.replyMarkup = ReplyKeyboardButtons.categoryKeyboard(
@@ -74,7 +76,7 @@ class MessageHandler(
                                     messageSourceService
                                 )
                                 sender.execute(sendMessage)
-                            } else if (text == messageSourceService.getMessage(BACK_BUTTON)) {
+                            } else if (text == messageSourceService.getMessage(LocalizationTextKey.BACK_BUTTON)) {
                                 val lastCategory = categoryServiceImpl.getLastCategory(user.cache!!)
 
                                 if(lastCategory!!.isNotEmpty()){
@@ -107,9 +109,9 @@ class MessageHandler(
                                         sendMessage.text = text
                                         sendMessage.replyMarkup = ReplyKeyboardButtons.enuKeyboard(
                                             messageSourceService.getMessage(LocalizationTextKey.ORDER_BUTTON),
-                                            messageSourceService.getMessage(ABOUT_US_BUTTON),
-                                            messageSourceService.getMessage(SETTINGS_BUTTON),
-                                            messageSourceService.getMessage(ADD_LOCATION_BUTTON)
+                                            messageSourceService.getMessage(LocalizationTextKey.ABOUT_US_BUTTON),
+                                            messageSourceService.getMessage(LocalizationTextKey.SETTINGS_BUTTON),
+                                            messageSourceService.getMessage(LocalizationTextKey.ADD_LOCATION_BUTTON)
                                         )
                                         sender.execute(sendMessage)
                                     }
@@ -129,14 +131,39 @@ class MessageHandler(
                                     user = userServiceImpl.update(user)
                                     sender.execute(sendMessage)
                                 } else {
-                                    sendMessage.text = text
-                                    user.cache = foodServiceImpl.getFoods(text)[0]
-                                    user = userServiceImpl.update(user)
-                                    sendMessage.replyMarkup = ReplyKeyboardButtons.categoryKeyboard(
-                                        foodServiceImpl.getFoods(text),
-                                        messageSourceService
-                                    )
-                                    sender.execute(sendMessage)
+
+                                    if(foodRepository.existsByName(text)){
+                                        sendMessage.text = text
+                                        user.cache = text
+                                        user = userServiceImpl.update(user)
+                                        sendMessage.replyMarkup = ReplyKeyboardButtons.countFoodCategory(
+                                            arrayOf("1","2","3"),
+                                            arrayOf("4","5","6"),
+                                            arrayOf("7","8","9"),
+                                            arrayOf(messageSourceService.getMessage(LocalizationTextKey.BACK_BUTTON),messageSourceService.getMessage(
+                                                LocalizationTextKey.PANNIER_BUTTON
+                                            ))
+                                        )
+                                        sender.execute(sendMessage)
+                                    }
+                                    else if(foodRepository.existsByName(user.cache!!)) {
+                                        when(text){
+                                            "1","2","3","4","5","6","7","8","9" ->{
+
+                                            }
+                                        }
+
+                                    }else{
+                                        sendMessage.text = text
+                                        user.cache = foodServiceImpl.getFoods(text)[0]
+                                        user = userServiceImpl.update(user)
+                                        sendMessage.replyMarkup = ReplyKeyboardButtons.categoryKeyboard(
+                                            foodServiceImpl.getFoods(text),
+                                            messageSourceService
+                                        )
+                                        sender.execute(sendMessage)
+                                    }
+
 
                                 }
 
@@ -153,119 +180,33 @@ class MessageHandler(
             }
 
         }else if (message.hasContact()) {
-                if (step == INPUT_CONTACT) {
-                    sendMessage.text = messageSourceService.getMessage(INPUT_MENU_MESSAGE)
-                    sendMessage.replyMarkup = ReplyKeyboardButtons.menuKeyboard(
-                        arrayOf(
-                            messageSourceService.getMessage(LocalizationTextKey.ORDER_BUTTON),
+            if (step == Step.INPUT_CONTACT) {
+                sendMessage.text = messageSourceService.getMessage(LocalizationTextKey.INPUT_MENU_MESSAGE)
+                sendMessage.replyMarkup = ReplyKeyboardButtons.menuKeyboard(
+                    arrayOf(
+                        messageSourceService.getMessage(LocalizationTextKey.ORDER_BUTTON),
 
-                            ),
-                        arrayOf(
-                            messageSourceService.getMessage(ABOUT_US_BUTTON),
-                            messageSourceService.getMessage(SETTINGS_BUTTON)
                         ),
-                        arrayOf(
+                    arrayOf(
+                        messageSourceService.getMessage(LocalizationTextKey.ABOUT_US_BUTTON),
+                        messageSourceService.getMessage(LocalizationTextKey.SETTINGS_BUTTON)
+                    ),
+                    arrayOf(
 
-                            messageSourceService.getMessage(ADD_LOCATION_BUTTON)
-                        ),
+                        messageSourceService.getMessage(LocalizationTextKey.ADD_LOCATION_BUTTON)
+                    ),
 
-                        )
-                    sender.execute(sendMessage)
+                    )
+                sender.execute(sendMessage)
 
-                    userServiceImpl.setStep(chatId, MENU)
-                }
-
+                userServiceImpl.setStep(chatId, Step.MENU)
             }
 
         }
 
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//                        Step.ORDER_BUTTON -> {
-//
-//                            if (text == messageSourceService.getMessage(BACK_BUTTON)) {
-//                                sendMessage.text = text
-//                                sendMessage.replyMarkup = ReplyKeyboardButtons.categoryKeyboard(
-//                                    categoryServiceImpl.getCategory(),
-//                                    messageSourceService
-//                                )
-//                                sender.execute(sendMessage)
-//                                userServiceImpl.setStep(chatId, MENU)
-//
-//                            } else {
-//                                if (categoryServiceImpl.getSubCategory(text)!!.isNotEmpty()) {
-//                                    sendMessage.text = text
-//                                    sendMessage.replyMarkup = ReplyKeyboardButtons.categoryKeyboard(
-//                                        categoryServiceImpl.getSubCategory(text)!!,
-//                                        messageSourceService
-//                                    )
-//                                    user.cache= categoryServiceImpl.getSubCategory(text)!![0]
-//                                    user = userServiceImpl.update(user)
-//                                    sender.execute(sendMessage)
-//                                } else {
-//                                    sendMessage.text = text
-//                                    sendMessage.replyMarkup = ReplyKeyboardButtons.categoryKeyboard(
-//                                        foodServiceImpl.getFoods(text),
-//                                        messageSourceService
-//                                    )
-//                                    sender.execute(sendMessage)
-//
-//
-//                                }
-//                            }
-//                        }
-
+}
 
 
 

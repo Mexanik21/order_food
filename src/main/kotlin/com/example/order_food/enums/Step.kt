@@ -6,6 +6,4 @@ enum class Step {
     INPUT_CONTACT,
     MENU,
     ORDER_BUTTON
-
-
 }

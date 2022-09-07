@@ -1,12 +1,10 @@
 package com.example.order_food.handlers
 
 import com.example.order_food.Buttons.MarkupButtons
-
-
-import com.example.order_food.enums.CallbackType.*
+import com.example.order_food.enums.CallbackType
 import com.example.order_food.enums.Language
 import com.example.order_food.enums.LocalizationTextKey
-import com.example.order_food.enums.Step.*
+import com.example.order_food.enums.Step
 import com.example.order_food.service.MessageSourceService
 import com.example.order_food.service.impl.UserServiceImpl
 import org.springframework.context.i18n.LocaleContextHolder
@@ -33,28 +31,28 @@ class CallBackHandler(
         sendMessage.enableHtml(true)
         sendMessage.chatId = telegramId
 
-       when(data){
+        when(data){
 
-           "$UZ","$RU"->{
-               if(data=="$UZ"){
-                   LocaleContextHolder.setLocale(Locale(Language.UZ.code))
-                   userServiceImpl.setLang(telegramId,Language.UZ)
+            "${CallbackType.UZ}","${CallbackType.RU}"->{
+                if(data=="${CallbackType.UZ}"){
+                    LocaleContextHolder.setLocale(Locale(Language.UZ.code))
+                    userServiceImpl.setLang(telegramId,Language.UZ)
 
-               }else if(data=="$RU"){
-                   LocaleContextHolder.setLocale(Locale(Language.RU.code))
-                   userServiceImpl.setLang(telegramId,Language.RU)
-               }
+                }else if(data=="${CallbackType.RU}"){
+                    LocaleContextHolder.setLocale(Locale(Language.RU.code))
+                    userServiceImpl.setLang(telegramId,Language.RU)
+                }
 
-               sendMessage.text=messageSourceService.getMessage(LocalizationTextKey.INPUT_CONTACT_MESSAGE)
-               sendMessage.replyMarkup=MarkupButtons.shareContact(messageSourceService.getMessage(LocalizationTextKey.ENTER_CONTACT_BUTTON))
-               sender.execute(sendMessage)
-               userServiceImpl.setStep(telegramId,INPUT_CONTACT)
-
-
-           }
+                sendMessage.text=messageSourceService.getMessage(LocalizationTextKey.INPUT_CONTACT_MESSAGE)
+                sendMessage.replyMarkup=MarkupButtons.shareContact(messageSourceService.getMessage(LocalizationTextKey.ENTER_CONTACT_BUTTON))
+                sender.execute(sendMessage)
+                userServiceImpl.setStep(telegramId, Step.INPUT_CONTACT)
 
 
-       }
+            }
+
+
+        }
 
 
     }

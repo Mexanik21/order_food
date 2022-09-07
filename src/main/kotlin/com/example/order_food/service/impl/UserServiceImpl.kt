@@ -1,9 +1,11 @@
 package com.example.order_food.service.impl
 
 import com.example.order_food.Entity.User
+import com.example.order_food.dtos.UserCreateDto
 import com.example.order_food.enums.Language
 import com.example.order_food.enums.Step
 import com.example.order_food.repository.UserRepository
+import com.example.order_food.security.MyPasswordEncoder
 import com.example.order_food.service.UserService
 
 
@@ -11,17 +13,17 @@ import org.springframework.stereotype.Service
 
 @Service
 class UserServiceImpl(
-  private val userRepository: UserRepository
-
+    private val userRepository: UserRepository,
+    private val myPasswordEncoder: MyPasswordEncoder
 ) : UserService {
 
 
-    override fun saveUser(telegramId: String):User{
-       if(userRepository.existsByTelegramId(telegramId)){
-          return userRepository.findByTelegramId(telegramId)
-       }else{
-           userRepository.save(User(telegramId))
-       }
+    override fun saveUser(telegramId: String): User {
+        if (userRepository.existsByTelegramId(telegramId)) {
+            return userRepository.findByTelegramId(telegramId)
+        } else {
+            userRepository.save(User(telegramId))
+        }
 
         return userRepository.findByTelegramId(telegramId)
 
@@ -40,7 +42,33 @@ class UserServiceImpl(
 
     override fun getStep(chatId: String): Step {
         val user = userRepository.findByTelegramId(chatId)
-        return user.step
+        return user.step!!
+
+    }
+
+    override fun create(userCreateDto: UserCreateDto) {
+
+        userCreateDto.let {
+            userRepository.save(User(
+                it.telegramId,
+                it.role,
+                it.step,
+                it.lang,
+                it.username,
+                it.fullName,
+                it.phoneNumber,
+                myPasswordEncoder.passwordEncoder()!!.encode(it.password)
+            ))
+        }
+    }
+
+    override fun update(user: User): User {
+        var u = userRepository.findById(user.id!!).orElseThrow{Exception("")}
+
+        user.lang.let { u.lang = it }
+        user.cache.let { u.cache = it }
+
+        return userRepository.save(user)
 
     }
 
@@ -59,6 +87,9 @@ class UserServiceImpl(
         user.step = step
         userRepository.save(user)
     }
+
+
+
 
 
 

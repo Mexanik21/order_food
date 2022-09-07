@@ -27,7 +27,4 @@ object InlineKeyboardButtons {
     private fun getRow(vararg buttons: InlineKeyboardButton): List<InlineKeyboardButton> {
         return Arrays.stream(buttons).toList()
     }
-
-
-
 }

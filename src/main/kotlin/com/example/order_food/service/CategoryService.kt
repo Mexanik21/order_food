@@ -5,10 +5,11 @@ import com.example.order_food.dtos.CategoryCreateDto
 
 import com.example.order_food.dtos.GetCategoryDto
 
-interface  CategoryService {
+interface CategoryService {
 
     fun createCategory(dto:CategoryCreateDto):Long
     fun getCategory():MutableList<String>
     fun getSubCategory(name:String):MutableList<String>?
     fun getLastCategory(name: String):MutableList<String>?
+
 }

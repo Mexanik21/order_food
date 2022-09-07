@@ -4,7 +4,6 @@ import com.example.order_food.getTelegramId
 import com.example.order_food.repository.UserRepository
 import com.example.order_food.service.Authenticate
 import org.springframework.context.i18n.LocaleContextHolder
-
 import org.springframework.stereotype.Service
 import org.telegram.telegrambots.meta.api.objects.Update
 import java.util.*

@@ -24,15 +24,20 @@ repositories {
 }
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    runtimeOnly("org.postgresql:postgresql")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
 
-    implementation("org.telegram:telegrambots-spring-boot-starter:6.0.1")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa:2.7.3")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.3")
+
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.10")
+    runtimeOnly("org.postgresql:postgresql:42.5.0")
+    testImplementation("org.springframework.boot:spring-boot-starter-test:2.7.3")
+    //bot
+    implementation("org.telegram:telegrambots-spring-boot-starter:6.1.0")
+    implementation("org.springframework.boot:spring-boot-starter-security:2.7.3")
+    implementation("org.mapstruct:mapstruct:1.5.2.Final")
+    implementation("io.jsonwebtoken:jjwt:0.9.1")
 }
 
 tasks.withType<KotlinCompile> {

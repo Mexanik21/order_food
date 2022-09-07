@@ -4,4 +4,5 @@ enum class CallbackType {
     CHOOSE_LANGUAGE,
     UZ,
     RU
+
 }

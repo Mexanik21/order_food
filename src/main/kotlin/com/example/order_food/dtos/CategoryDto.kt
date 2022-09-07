@@ -8,6 +8,6 @@ data class CategoryCreateDto(
 
 data class GetCategoryDto(
    var name:String
+)
 
-   )
 

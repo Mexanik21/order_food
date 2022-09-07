@@ -6,7 +6,7 @@ import javax.persistence.OneToOne
 
 
 @Entity(name = "buyurtmalar")
-class OrderItems (
+class OrderItem (
         @ManyToOne
         var order: Order,
         @OneToOne
