@@ -50,7 +50,7 @@ class MessageHandler(
 
                     } else {
                         sendMessage.text = messageSourceService.getMessage(LocalizationTextKey.INPUT_MENU_MESSAGE)
-                        ReplyKeyboardButtons.menuKeyboard(
+                        sendMessage.replyMarkup=ReplyKeyboardButtons.menuKeyboard(
                             arrayOf(
                                 messageSourceService.getMessage(LocalizationTextKey.ORDER_BUTTON),
                                 messageSourceService.getMessage(LocalizationTextKey.ABOUT_US_BUTTON),
@@ -78,7 +78,6 @@ class MessageHandler(
                                 sender.execute(sendMessage)
                             } else if (text == messageSourceService.getMessage(LocalizationTextKey.BACK_BUTTON)) {
                                 val lastCategory = categoryServiceImpl.getLastCategory(user.cache!!)
-
                                 if(lastCategory!!.isNotEmpty()){
                                     lastCategory.let {
                                         sendMessage.text = text
