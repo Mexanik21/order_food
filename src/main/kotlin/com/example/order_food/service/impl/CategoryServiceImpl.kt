@@ -42,7 +42,7 @@ class CategoryServiceImpl (
         return categoryRepository.getSubCategory(name)
     }
 
-    override fun getLastCategory(name: String): MutableList<String>? {
+    override fun getLastCategory(name: String): MutableList<String> {
         return  categoryRepository.getLastCategory(name)
     }
 

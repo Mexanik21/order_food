@@ -21,9 +21,9 @@ interface CategoryRepository : BaseRepository<Category> {
     @Query(
         """select c.name from category c where
             (select c.parent_id from category c where
-            (select ca.parent_id from category as ca where ca.name=:name) = c.id) = c.parent_id""", nativeQuery = true
+            (select ca.parent_id from category as ca where ca.name=:name) = c.id) = c.parent_id """, nativeQuery = true
     )
-    fun  getLastCategory(name: String): MutableList<String>?
+    fun  getLastCategory(name: String): MutableList<String>
 
     @Query(
         """select c.* from category c where (select ca.parent_id from category ca where ca.name = :name) = c.id and c.parent_id is null """,
