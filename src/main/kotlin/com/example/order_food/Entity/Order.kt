@@ -10,9 +10,9 @@ import javax.persistence.ManyToOne
 class Order(
     @ManyToOne
     var user: User,
-    @ManyToOne
-    var address: Address,
     var phoneNumber: String,
-    @Enumerated(EnumType.STRING) var status: OrderStatus
+    @ManyToOne
+    var address: Address?=null,
+    @Enumerated(EnumType.STRING) var status: OrderStatus?=null
 
 ) : BaseEntity()

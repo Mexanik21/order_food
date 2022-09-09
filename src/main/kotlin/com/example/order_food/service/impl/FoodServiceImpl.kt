@@ -56,5 +56,9 @@ class FoodServiceImpl(
         foodRepository.deleteById(id)
     }
 
+    override fun findByName(name: String)=foodRepository.findByName(name)
+    override fun existsByName(name: String)=foodRepository.existsByName(name)
+    override fun nameFindById(id: Long)=foodRepository.nameFindById(id)
+
 
 }

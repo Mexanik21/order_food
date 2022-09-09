@@ -46,5 +46,6 @@ class CategoryServiceImpl (
         return  categoryRepository.getLastCategory(name)
     }
 
+    override fun getCategoryEmptyParentId(name: String)=categoryRepository.getCategoryEmptyParentId(name)
 
 }

@@ -1,5 +1,6 @@
 package com.example.order_food.service
 
+import com.example.order_food.Entity.Food
 import com.example.order_food.dtos.*
 
 interface FoodService {
@@ -10,4 +11,7 @@ interface FoodService {
     fun getAll(): List<FoodResponseDto>
     fun update(id: Long, dto: FoodUpdateDto)
     fun delete(id: Long)
+   fun  findByName(name: String): Food
+    fun existsByName(name:String):Boolean
+    fun nameFindById(id:Long):String
 }

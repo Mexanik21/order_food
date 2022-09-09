@@ -18,9 +18,7 @@ class OrderServiceImpl(
         dto.apply {
             orderRepository.save(Order(
                 userRepository.findById(userId).orElseThrow{Exception()},
-                address,
-                phoneNumber,
-                status))
+                phoneNumber))
         }
     }
 
@@ -46,6 +44,7 @@ class OrderServiceImpl(
         orderRepository.deleteById(id)
     }
 
+    override fun OrderdfidnByUserId(id: Long)=orderRepository.OrderdfidnByUserId(id)
 
-    
+
 }

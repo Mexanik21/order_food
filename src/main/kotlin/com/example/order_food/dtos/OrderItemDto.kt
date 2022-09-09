@@ -3,7 +3,7 @@ package com.example.order_food.dtos
 import com.example.order_food.Entity.*
 
 
-data class OrderItemCreateDto(
+data class  OrderItemCreateDto(
     var orderId: Long,
     var foodId: Long,
     var count:Int

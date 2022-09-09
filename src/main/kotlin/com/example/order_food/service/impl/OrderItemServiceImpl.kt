@@ -4,6 +4,7 @@ import com.example.order_food.Entity.OrderItem
 import com.example.order_food.dtos.OrderItemCreateDto
 import com.example.order_food.dtos.OrderItemResponseDto
 import com.example.order_food.dtos.OrderItemUpdateDto
+import com.example.order_food.enums.OrderStatus
 import com.example.order_food.repository.FoodRepository
 import com.example.order_food.repository.OrderItemRepository
 import com.example.order_food.repository.OrderRepository
@@ -18,10 +19,26 @@ class OrderItemServiceImpl(
     private val foodRepository: FoodRepository
 ) : OrderItemService {
     override fun create(dto: OrderItemCreateDto) {
-        dto.apply { orderItemRepository.save(OrderItem(
-            orderRepository.findById(orderId).orElseThrow{Exception()},
-            foodRepository.findById(foodId).orElseThrow{Exception()},
-            count)) }
+       val order= orderRepository.findById(dto.orderId).orElseThrow{Exception()}
+      val food=  foodRepository.findById(dto.foodId).orElseThrow{Exception()}
+
+        if(orderItemRepository.existsByOrderAndFood(order,food)){
+
+            val orderItem=orderItemRepository.findByOrderAndFood(order,food)
+
+            orderItem.count+=dto.count
+
+            orderItemRepository.save(orderItem)
+
+
+        }else{
+            orderItemRepository.save(OrderItem(
+                order,
+                food,
+                dto.count
+            ))
+        }
+
     }
 
     override fun getOne(id: Long) = OrderItemResponseDto.toDto(
@@ -43,4 +60,6 @@ class OrderItemServiceImpl(
     override fun delete(id: Long) {
         orderItemRepository.deleteById(id)
     }
+
+    override fun getOrderItems(id: Long)=orderItemRepository.getOrderItems(id)
 }
