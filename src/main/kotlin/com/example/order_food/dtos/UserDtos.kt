@@ -8,11 +8,11 @@ import com.example.order_food.enums.Step
 
 data class UserCreateDto(
     var telegramId: String,
-    var password:String? = null,
-    var username: String? = null,
     var role: Role? = Role.USER,
     var step: Step? = Step.START,
     var  lang: Language = Language.UZ,
+    var password:String? = null,
+    var username: String? = null,
     var fullName: String? = null,
     var phoneNumber: String? = null,
 )

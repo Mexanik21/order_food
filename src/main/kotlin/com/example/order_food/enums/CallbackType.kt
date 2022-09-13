@@ -1,7 +1,8 @@
 package com.example.order_food.enums
 
 enum class CallbackType {
-    UZ,
-    RU
+    I_UZ,
+    I_RU,
+    I_ORDER
 
 }

@@ -5,5 +5,5 @@ enum class Step {
     LANG,
     INPUT_CONTACT,
     MENU,
-    ORDER_BUTTON
+    STEP_ORDER_BUTTON
 }

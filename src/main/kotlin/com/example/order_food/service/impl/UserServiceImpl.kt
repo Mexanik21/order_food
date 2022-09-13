@@ -18,16 +18,8 @@ class UserServiceImpl(
 ) : UserService {
 
 
-    override fun saveUser(telegramId: String): User {
-        if (userRepository.existsByTelegramId(telegramId)) {
-            return userRepository.findByTelegramId(telegramId)
-        } else {
-            userRepository.save(User(telegramId))
-        }
 
-        return userRepository.findByTelegramId(telegramId)
 
-    }
 
     override fun getLanguage(chatId: String): Language? {
         val user = userRepository.findByTelegramId(chatId)
@@ -46,33 +38,36 @@ class UserServiceImpl(
 
     }
 
-    override fun create(userCreateDto: UserCreateDto) {
+    override fun create(userCreateDto: UserCreateDto): User {
+        val telegramId=userCreateDto.telegramId
+        if (userRepository.existsByTelegramId(telegramId)) {
+            return userRepository.findByTelegramId(telegramId)
+        } else {
+            userCreateDto.let {
+                return userRepository.save(
+                    User(it.telegramId)
 
-        userCreateDto.let {
-            userRepository.save(
-                User(
-                    it.telegramId,
-                    it.role,
-                    it.step,
-                    it.lang,
-                    it.username,
-                    it.fullName,
-                    it.phoneNumber,
-                    null,
-                    myPasswordEncoder.passwordEncoder()!!.encode(it.password)
                 )
-            )
+            }
         }
+
     }
 
     override fun update(user: User): User {
-        var u = userRepository.findById(user.id!!).orElseThrow { Exception("") }
+        val u = userRepository.findById(user.id!!).orElseThrow { Exception("") }
 
         user.lang.let { u.lang = it }
         user.cache.let { u.cache = it }
+        user.phoneNumber.let { u.phoneNumber = it }
+        user.fullName.let { u.fullName = it }
+        user.step.let { u.step = it }
+        user.modifiedDate.let { u.modifiedDate=it }
+
 
         return userRepository.save(user)
     }
+
+
 
 
     override fun setStep(chatId: String, step: Step) {
@@ -80,6 +75,9 @@ class UserServiceImpl(
         user.step = step
         userRepository.save(user)
     }
+
+
+
 
 
 }

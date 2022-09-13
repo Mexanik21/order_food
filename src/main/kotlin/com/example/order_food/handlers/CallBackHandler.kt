@@ -1,16 +1,17 @@
 package com.example.order_food.handlers
 
-import com.example.order_food.Buttons.MarkupButtons
-import com.example.order_food.enums.CallbackType
-import com.example.order_food.enums.Language
-import com.example.order_food.enums.LocalizationTextKey
-import com.example.order_food.enums.Step
+import com.example.order_food.Buttons.ReplyKeyboardButtons
+import com.example.order_food.dtos.UserCreateDto
+import com.example.order_food.enums.CallbackType.*
+import com.example.order_food.enums.Language.*
+import com.example.order_food.enums.LocalizationTextKey.*
+
+import com.example.order_food.enums.Step.*
 import com.example.order_food.service.MessageSourceService
 import com.example.order_food.service.impl.UserServiceImpl
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.stereotype.Service
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
-
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery
 import org.telegram.telegrambots.meta.bots.AbsSender
 import java.util.*
@@ -27,27 +28,39 @@ class CallBackHandler(
         val data = callbackQuery.data
         val message = callbackQuery.message
         val telegramId = message.chatId.toString()
+        val user = userServiceImpl.create(UserCreateDto(telegramId))
+        val step = user.step
         val sendMessage = SendMessage()
         sendMessage.enableHtml(true)
         sendMessage.chatId = telegramId
 
         when(data){
 
-            "${CallbackType.UZ}","${CallbackType.RU}"->{
-                if(data=="${CallbackType.UZ}"){
-                    LocaleContextHolder.setLocale(Locale(Language.UZ.code))
-                    userServiceImpl.setLang(telegramId,Language.UZ)
+            "$I_UZ","$I_RU"->{
+                if(step==LANG){
+                        if(data=="$I_UZ"){
+                            LocaleContextHolder.setLocale(Locale(UZ.code))
+                            userServiceImpl.setLang(telegramId,UZ)
 
-                }else if(data=="${CallbackType.RU}"){
-                    LocaleContextHolder.setLocale(Locale(Language.RU.code))
-                    userServiceImpl.setLang(telegramId,Language.RU)
+                        }else if(data=="$I_RU"){
+                            LocaleContextHolder.setLocale(Locale(RU.code))
+                            userServiceImpl.setLang(telegramId,RU)
+                        }
+
+                        sendMessage.text=messageSourceService.getMessage(INPUT_CONTACT_MESSAGE)
+                        sendMessage.replyMarkup=ReplyKeyboardButtons.shareContact(messageSourceService.getMessage(ENTER_CONTACT_BUTTON))
+                        sender.execute(sendMessage)
+                        userServiceImpl.setStep(telegramId,INPUT_CONTACT)
+
                 }
 
-                sendMessage.text=messageSourceService.getMessage(LocalizationTextKey.INPUT_CONTACT_MESSAGE)
-                sendMessage.replyMarkup=MarkupButtons.shareContact(messageSourceService.getMessage(LocalizationTextKey.ENTER_CONTACT_BUTTON))
-                sender.execute(sendMessage)
-                userServiceImpl.setStep(telegramId, Step.INPUT_CONTACT)
 
+            }
+
+            "$I_ORDER" ->{
+                sendMessage.text=messageSourceService.getMessage(LOCATION_BUTTON_MESSAGE)
+                sendMessage.replyMarkup= ReplyKeyboardButtons.myLocation(messageSourceService)
+                sender.execute(sendMessage)
 
             }
 

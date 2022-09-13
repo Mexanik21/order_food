@@ -1,7 +1,8 @@
 package com.example.order_food.Buttons
 
 
-import com.example.order_food.enums.LocalizationTextKey
+
+import com.example.order_food.enums.LocalizationTextKey.*
 import com.example.order_food.service.MessageSourceService
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup
@@ -10,6 +11,33 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 
 object ReplyKeyboardButtons {
     private val board = ReplyKeyboardMarkup()
+
+    fun shareContact(name:String): ReplyKeyboard {
+        val phone = KeyboardButton(name)
+        phone.requestContact = true
+        board.selective = null
+        board.oneTimeKeyboard=false
+        board.resizeKeyboard =true
+        val row = KeyboardRow()
+        row.add(phone)
+        board.keyboard = listOf(row)
+        return board
+    }
+
+    fun myLocation(messageSourceService: MessageSourceService):ReplyKeyboard{
+        val location=KeyboardButton(messageSourceService.getMessage(LOCATION_BUTTON))
+        val back=KeyboardButton(messageSourceService.getMessage(BACK_BUTTON))
+        location.requestLocation=true
+        val row = KeyboardRow()
+        val row1=KeyboardRow()
+        row.add(location)
+        row1.add(back)
+        board.resizeKeyboard =true
+        board.keyboard= listOf(row,row1)
+
+
+        return board
+    }
 
     fun menuKeyboard(vararg rows: Array<String>): ReplyKeyboard {
         board.keyboard = mutableListOf()
@@ -31,9 +59,9 @@ object ReplyKeyboardButtons {
 
     fun categoryKeyboard(categoryList: MutableList<String>, messageSourceService: MessageSourceService): ReplyKeyboard {
         val first = KeyboardRow()
-        val back = KeyboardButton(messageSourceService.getMessage(LocalizationTextKey.BACK_BUTTON))
+        val back = KeyboardButton(messageSourceService.getMessage(BACK_BUTTON))
         first.add(back)
-        val pannier = KeyboardButton(messageSourceService.getMessage(LocalizationTextKey.PANNIER_BUTTON))
+        val pannier = KeyboardButton(messageSourceService.getMessage(PANNIER_BUTTON))
         first.add(pannier)
 
         val line = arrayListOf(first)
@@ -72,6 +100,22 @@ object ReplyKeyboardButtons {
         board.resizeKeyboard = true
         board.resizeKeyboard = true
         board.selective = true
+        return board
+    }
+
+
+
+    fun confirm(messageSourceService: MessageSourceService):ReplyKeyboard{
+        val board=ReplyKeyboardMarkup()
+        val confirm=KeyboardButton(messageSourceService.getMessage(CONFIRMATION_BUTTON))
+        val back=KeyboardButton(messageSourceService.getMessage(BACK_BUTTON))
+        val row = KeyboardRow()
+        val row1=KeyboardRow()
+        row.add(confirm)
+        row1.add(back)
+        board.resizeKeyboard =true
+        board.keyboard= listOf(row,row1)
+
         return board
     }
 }

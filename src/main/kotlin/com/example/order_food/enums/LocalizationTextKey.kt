@@ -8,6 +8,8 @@ enum class LocalizationTextKey {
     ADD_LOCATION_BUTTON,
     PANNIER_BUTTON,
     BACK_BUTTON,
+    CONFIRMATION_BUTTON,
+    LOCATION_BUTTON,
 
 
     //----------BUTTON TEXT (END)-----------
@@ -16,7 +18,10 @@ enum class LocalizationTextKey {
     // ----------MESSAGE TEXT (START)-----------
     CHOOSE_LANGUAGE_MESSAGE,
     INPUT_CONTACT_MESSAGE,
-    INPUT_MENU_MESSAGE
+    INPUT_MENU_MESSAGE,
+    ORDER_BUTTON_MESSAGE,
+    LOCATION_BUTTON_MESSAGE,
+    WRONG_COMMAND_MESSAGE
 
 
     // ----------MESSAGE TEXT (END)-----------
