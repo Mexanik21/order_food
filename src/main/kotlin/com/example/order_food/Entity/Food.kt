@@ -13,5 +13,4 @@ class Food(
     var status: Boolean?=null,
     @OneToOne
     var file: File?=null
-
 ) : BaseEntity()

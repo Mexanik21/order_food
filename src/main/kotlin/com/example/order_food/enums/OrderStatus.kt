@@ -1,5 +1,10 @@
 package com.example.order_food.enums
 
 enum class OrderStatus {
-    STATR
+    CONFIRMATION,
+    CONFIRMED,
+    COOKING,
+    DELIVERY,
+    COMPLETED,
+    FAILED
 }

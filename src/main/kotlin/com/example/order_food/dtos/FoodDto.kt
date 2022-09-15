@@ -9,7 +9,8 @@ import javax.persistence.OneToOne
 data class FoodCreateDto(
     var name: String,
     var price: Long,
-    var categoryId: Long
+    var categoryId: Long,
+    var fileId: Long
 )
 
 
@@ -24,13 +25,13 @@ data class FoodUpdateDto(
 data class FoodResponseDto(
     var name: String,
     var price: Long,
-    var category: Category,
+    var categoryId: Long,
     var status: Boolean?,
     var fileId: Long
 ){
     companion object{
         fun toDto(f:Food) = f.run {
-            FoodResponseDto(name,price,category,status,file!!.id!!)
+            FoodResponseDto(name,price,category.id!!,status,file!!.id!!)
         }
     }
 }

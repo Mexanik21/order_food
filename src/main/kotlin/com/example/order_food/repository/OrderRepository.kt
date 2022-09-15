@@ -10,6 +10,13 @@ interface OrderRepository : BaseRepository<Order> {
     fun OrderdfidnByUserId(id: Long): Order
 
 
+    @Query("""select * from buyurtma where deleted = false and status != 'CREATION' and id = :id """, nativeQuery = true)
+    fun findByIdAndDeletedIsFalse(id:Long):Order?
+    @Query("""select * from buyurtma where deleted = false and status != 'CREATION'""", nativeQuery = true)
+    fun findByAllOrders():List<Order>
+
+
+
 
 
 }

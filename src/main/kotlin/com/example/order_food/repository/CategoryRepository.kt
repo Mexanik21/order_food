@@ -23,6 +23,16 @@ interface CategoryRepository : BaseRepository<Category> {
     @Query("select c.name from category c where c.parent_id=(select c.parent_id from category  c where c.name=:name) and c.deleted=false", nativeQuery = true)
     fun getLastCategory2(name:String):MutableList<String>
 
+    fun findByIdAndDeletedIsFalse(id: Long):Category?
+
+    @Query("""select c.* from Category c where c.deleted = false and c.parent_id = :id""", nativeQuery = true)
+    fun findByParentIdAndDeletedIsFalse(id: Long):List<Category>
+
+    fun findAllByDeletedIsFalse():List<Category>
+    @Query("""select c.* from Category c where c.deleted = false and c.parent_id IS NULL""", nativeQuery = true)
+    fun findHeadByDeletedIsFalse():List<Category>
+
+
 
     @Query("select c.name from category c where c.id=(select ca.parent_id from category ca where ca.name=:name)", nativeQuery = true)
     fun  getBackCategory(name:String):String?

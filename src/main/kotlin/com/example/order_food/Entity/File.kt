@@ -4,7 +4,7 @@ import javax.persistence.Entity
 
 @Entity
 class File (
-  var hashId:String,
+  var hashId:String? = null,
   var mimeType:String,
-  var path:String
+  var path:String? = null
         ):BaseEntity()

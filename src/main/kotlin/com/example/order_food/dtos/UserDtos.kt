@@ -7,14 +7,11 @@ import com.example.order_food.enums.Step
 
 
 data class UserCreateDto(
-    var telegramId: String,
-    var role: Role? = Role.USER,
-    var step: Step? = Step.START,
-    var  lang: Language = Language.UZ,
-    var password:String? = null,
-    var username: String? = null,
-    var fullName: String? = null,
-    var phoneNumber: String? = null,
+    var fullName: String,
+    var phoneNumber: String,
+    var username: String,
+    var password: String,
+    var role: Role?,
 )
 
 data class UserUpdateDto(
@@ -24,19 +21,19 @@ data class UserUpdateDto(
     var username: String? = null,
     var fullName: String? = null,
     var phoneNumber: String? = null,
+    var password: String? = null
 )
 
 data class UserResponseDto(
-    var role: Role,
-    var step: Step,
-    var  lang: Language,
+    var userId: Long,
     var username: String,
-    var fullName: String,
-    var phoneNumber: String,
+    var fullName: String?,
+    var phoneNumber: String?,
+    var role: Role
 ) {
-    companion object{
+    companion object {
         fun toDto(u: User) = u.run {
-            UserResponseDto(role!!,step!!,lang,username,fullName!!,phoneNumber!!)
+            UserResponseDto(id!!,username,fullName,phoneNumber,role!!)
         }
     }
 }

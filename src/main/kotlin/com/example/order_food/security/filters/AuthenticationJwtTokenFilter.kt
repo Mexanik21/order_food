@@ -36,7 +36,5 @@ class AuthenticationJwtTokenFilter(
             }
         }
         filterChain.doFilter(request, response)
-
-
     }
 }

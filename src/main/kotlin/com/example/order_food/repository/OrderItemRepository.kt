@@ -16,5 +16,8 @@ interface OrderItemRepository:BaseRepository<OrderItem> {
     @Query("select b from buyurtmalar b where b.order = ?1 and b.food = ?2")
     fun findByOrderAndFood(order: Order, food: Food):OrderItem
 
+    @Query("select b.* from buyurtmalar b where b.deleted = false and b.order_id = :id", nativeQuery = true)
+    fun findByIdAndDeletedIsFalse(id: Long):List<OrderItem>
+
 
 }

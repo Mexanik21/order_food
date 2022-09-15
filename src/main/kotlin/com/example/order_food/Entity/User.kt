@@ -6,7 +6,6 @@ import com.example.order_food.enums.Step
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
-import java.util.function.Consumer
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EnumType
@@ -21,7 +20,7 @@ class User(
     @Enumerated(EnumType.STRING)
     var step: Step? = Step.START,
     @Enumerated(EnumType.STRING)
-    var  lang: Language = Language.UZ,
+    var lang: Language? = Language.UZ,
     @Column(length = 24, unique = true)
     private var username: String? = null,
     @Column(length = 128)
@@ -32,7 +31,7 @@ class User(
 
 
 
-    private val password: String? = null,
+    private var password: String? = null,
     val isEnabled: Boolean? = true,
     val isCredentialsNonExpired: Boolean? = true,
     val isAccountNonExpired: Boolean? = true,
@@ -41,7 +40,14 @@ class User(
 
     ) : BaseEntity(),UserDetails {
     override fun getUsername(): String = username!!
+    fun setUsername(username: String){
+        this.username = username
+    }
     override fun getPassword(): String = password!!
+
+    fun setPassword(password: String){
+        this.password = password
+    }
     override fun isEnabled(): Boolean = isEnabled!!
     override fun isCredentialsNonExpired(): Boolean = isCredentialsNonExpired!!
     override fun isAccountNonExpired(): Boolean = isAccountNonExpired!!

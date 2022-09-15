@@ -1,13 +1,21 @@
 package com.example.order_food.service
 
-import com.example.order_food.dtos.*
+import com.example.order_food.Entity.File
+import org.springframework.core.io.FileUrlResource
+import org.springframework.util.FileCopyUtils
+import org.springframework.web.multipart.MultipartFile
+import org.springframework.web.multipart.MultipartHttpServletRequest
+import java.io.FileInputStream
+import javax.servlet.http.HttpServletResponse
 
 interface FileService {
 
 
-    fun create(dto: FileCreateDto)
-    fun getOne(id: Long): FileResponseDto
-    fun getAll(): List<FileResponseDto>
-    fun update(id: Long, dto: FileUpdateDto)
+    fun getOne(id: Long, response: HttpServletResponse): FileInputStream
+
     fun delete(id: Long)
+    fun fileUpload(request: MultipartHttpServletRequest)
+
+    fun getFile(id: Long): FileUrlResource
+
 }

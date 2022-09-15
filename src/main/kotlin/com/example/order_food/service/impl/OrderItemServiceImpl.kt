@@ -4,11 +4,14 @@ import com.example.order_food.Entity.OrderItem
 import com.example.order_food.dtos.OrderItemCreateDto
 import com.example.order_food.dtos.OrderItemResponseDto
 import com.example.order_food.dtos.OrderItemUpdateDto
+import com.example.order_food.dtos.Response
 import com.example.order_food.enums.OrderStatus
 import com.example.order_food.repository.FoodRepository
 import com.example.order_food.repository.OrderItemRepository
 import com.example.order_food.repository.OrderRepository
+import com.example.order_food.response.ResponseObj
 import com.example.order_food.service.OrderItemService
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 
 
@@ -41,9 +44,16 @@ class OrderItemServiceImpl(
 
     }
 
-    override fun getOne(id: Long) = OrderItemResponseDto.toDto(
-        orderItemRepository.findById(id).orElseThrow { Exception("OrderItem not found this id = $id") }
-    )
+    override fun getByOrderId(id: Long):ResponseEntity<*> {
+        val orderItems = orderItemRepository.findByIdAndDeletedIsFalse(id)
+        return if (orderItems.isNotEmpty()){
+            ResponseEntity.status(200).body(ResponseObj("Success", 200, true, orderItems.map { OrderItemResponseDto.toDto(it) }))
+        } else {
+            ResponseEntity.status(404).body(ResponseObj("Order item not found $id", 404, false, null))
+        }
+    }
+
+
 
     override fun getAll() = orderItemRepository.findAll().map { OrderItemResponseDto.toDto(it) }
 

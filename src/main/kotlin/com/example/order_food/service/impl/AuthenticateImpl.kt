@@ -13,8 +13,8 @@ class AuthenticateImpl(private val userRepository: UserRepository) : Authenticat
     override fun authenticate(update: Update) {
         try {
             val user = userRepository.findByTelegramId(update.getTelegramId().toString())
-            println(user.lang.code)
-            LocaleContextHolder.setLocale(Locale(user.lang.code))
+            println(user.lang!!.code)
+            LocaleContextHolder.setLocale(Locale(user.lang!!.code))
         } catch (e: Exception) {
             if (update.channelPost == null && update.editedChannelPost == null)
                 println("Bot exception: $update. Message: $e.message")

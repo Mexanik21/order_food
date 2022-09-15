@@ -1,16 +1,21 @@
 package com.example.order_food.handlers
 
-import com.example.order_food.*
 import com.example.order_food.Buttons.InlineKeyboardButtons
 import com.example.order_food.Buttons.ReplyKeyboardButtons
+import com.example.order_food.MainBotBot
 import com.example.order_food.controllers.MyFeignClient
 import com.example.order_food.dtos.AddressCreateDto
 import com.example.order_food.dtos.OrderCreateDto
 import com.example.order_food.dtos.OrderItemCreateDto
+import com.example.order_food.dtos.UserCreateDto
 import com.example.order_food.enums.Language.RU
 import com.example.order_food.enums.Language.UZ
 import com.example.order_food.enums.LocalizationTextKey.*
+import com.example.order_food.enums.Step
 import com.example.order_food.enums.Step.*
+import com.example.order_food.existsTextInCacheList
+import com.example.order_food.orderInfo
+import com.example.order_food.pannierBody
 import com.example.order_food.repository.CategoryRepository
 import com.example.order_food.repository.FoodRepository
 import com.example.order_food.service.MessageSourceService
@@ -228,19 +233,6 @@ class MessageHandler(
                                         user.cache = categoryRepository.getBackCategory(cache)
                                         userServiceImpl.update(user)
                                     }
-
-
-                                } else if(foodServiceImpl.existsByName(cache)){
-                                    sendMessage.text = messageSourceService.getMessage(CONTINUE_ORDER_MESSAGE)
-                                    sendMessage.replyMarkup = ReplyKeyboardButtons.categoryKeyboard(
-                                        foodRepository.getLastFoods(cache),
-                                        messageSourceService
-                                    )
-                                    sender.execute(sendMessage)
-
-                                    user.cache=foodRepository.getBackFood(cache)
-                                    userServiceImpl.update(user)
-
                                 }
 
                             }

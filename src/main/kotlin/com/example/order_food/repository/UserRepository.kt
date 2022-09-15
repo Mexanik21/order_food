@@ -13,8 +13,10 @@ interface UserRepository : BaseRepository<User> {
 
     fun existsByTelegramId(telegramId: String):Boolean
 
-    fun findByUsername(username:String):User
+    fun findByUsername(userName:String):User?
 
-
+    fun existsByUsername(username: String):Boolean
+    fun findByIdAndDeletedIsFalse(id: Long):User?
+    fun findAllByDeletedIsFalse():List<User>
 
 }
