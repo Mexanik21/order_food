@@ -27,7 +27,7 @@ class FoodServiceImpl(
             .orElseThrow { Exception("food not found by id: ${dto.categoryId}") }
         foodRepository.save(Food(dto.name, dto.price, category))
     }
-    override fun getFoods(categoryName: String): MutableList<String> {
+    override fun getFoods(categoryName: String): MutableList<String>? {
         return foodRepository.getFoods(categoryName)
     }
 

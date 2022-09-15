@@ -12,5 +12,5 @@ interface UserService {
     fun getStep(chatId: String): Step
     fun create(userCreateDto: UserCreateDto):User
     fun update(user:User):User
-
+    fun saveUser(telegramId: String): User
 }

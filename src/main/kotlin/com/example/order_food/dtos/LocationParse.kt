@@ -107,7 +107,7 @@ data class Thoroughfare(
     @JsonProperty("ThoroughfareName")
     val thoroughfareName:String,
     @JsonProperty("Premise")
-    val premise:Premise,
+    val premise:Premise?=null,
 )
 
 data class Premise(

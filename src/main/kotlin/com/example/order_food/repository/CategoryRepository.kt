@@ -7,29 +7,23 @@ import org.springframework.data.jpa.repository.Query
 interface CategoryRepository : BaseRepository<Category> {
 
 
-    @Query("select c.name from category c where c.parent_id  is null", nativeQuery = true)
+    @Query("select c.name from category c where c.parent_id is null and c.deleted=false", nativeQuery = true)
     fun getCategory(): MutableList<String>
 
 
     @Query(
-        "select c.name from category c where (select ca.id from category as ca where ca.name=:name) = c.parent_id",
+        "select c.name from category c where (select ca.id from category as ca where ca.name=:name and ca.deleted=false) = c.parent_id and c.deleted=false",
         nativeQuery = true
     )
     fun getSubCategory(name: String): MutableList<String>?
 
 
-    @Query(
-        """select c.name from category c where
-            (select c.parent_id from category c where
-            (select ca.parent_id from category as ca where ca.name=:name) = c.id) = c.parent_id """, nativeQuery = true
-    )
-    fun  getLastCategory(name: String): MutableList<String>
+    fun existsByName(name: String):Boolean
 
-    @Query(
-        """select c.* from category c where (select ca.parent_id from category ca where ca.name = :name) = c.id and c.parent_id is null """,
-        nativeQuery = true
-    )
-    fun getCategoryEmptyParentId(name: String): Category?
+    @Query("select c.name from category c where c.parent_id=(select c.parent_id from category  c where c.name=:name) and c.deleted=false", nativeQuery = true)
+    fun getLastCategory2(name:String):MutableList<String>
 
 
+    @Query("select c.name from category c where c.id=(select ca.parent_id from category ca where ca.name=:name)", nativeQuery = true)
+    fun  getBackCategory(name:String):String?
 }

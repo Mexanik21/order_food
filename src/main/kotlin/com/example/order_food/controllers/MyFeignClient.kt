@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam
 interface MyFeignClient {
     @GetMapping("?format=json&apikey=d0133d2d-b472-4cb5-af93-552102be95ef")
     fun getLocationInfo(
-        @RequestParam("geocode") r:String,
-        @RequestParam("results") a:String
+        @RequestParam("geocode") geocode:String,
+        @RequestParam("results") results:String,
+        @RequestParam("lang")   lang:String
     ): Welcome
 }

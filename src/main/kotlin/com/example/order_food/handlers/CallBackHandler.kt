@@ -28,7 +28,7 @@ class CallBackHandler(
         val data = callbackQuery.data
         val message = callbackQuery.message
         val telegramId = message.chatId.toString()
-        val user = userServiceImpl.create(UserCreateDto(telegramId))
+        val user = userServiceImpl.saveUser(telegramId)
         val step = user.step
         val sendMessage = SendMessage()
         sendMessage.enableHtml(true)
@@ -58,11 +58,40 @@ class CallBackHandler(
             }
 
             "$I_ORDER" ->{
-                sendMessage.text=messageSourceService.getMessage(LOCATION_BUTTON_MESSAGE)
-                sendMessage.replyMarkup= ReplyKeyboardButtons.myLocation(messageSourceService)
-                sender.execute(sendMessage)
+
+                if(step==S_ORDER_BUTTON){
+                    sendMessage.text=messageSourceService.getMessage(LOCATION_BUTTON_MESSAGE)
+                    sendMessage.replyMarkup= ReplyKeyboardButtons.myLocation(messageSourceService)
+                    sender.execute(sendMessage)
+                    user.step=SEND_LOCATION
+                    userServiceImpl.update(user)
+                }
+
 
             }
+
+            "$ADD"->{
+                if(step==S_ORDER_BUTTON ){
+
+
+                }
+
+            }
+            "$REDUCE"->{
+                if(step==S_ORDER_BUTTON ){
+
+                }
+
+            }
+
+            "$CLEAR"->{
+                if(step==S_ORDER_BUTTON ){
+
+                }
+
+            }
+
+
 
 
         }

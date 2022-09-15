@@ -17,7 +17,16 @@ class UserServiceImpl(
     private val myPasswordEncoder: MyPasswordEncoder
 ) : UserService {
 
+    override fun saveUser(telegramId: String): User {
+        if (userRepository.existsByTelegramId(telegramId)) {
+            return userRepository.findByTelegramId(telegramId)
+        } else {
+            userRepository.save(User(telegramId))
+        }
 
+        return userRepository.findByTelegramId(telegramId)
+
+    }
 
 
 

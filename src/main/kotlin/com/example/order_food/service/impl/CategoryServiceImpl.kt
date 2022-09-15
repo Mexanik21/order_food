@@ -39,13 +39,15 @@ class CategoryServiceImpl (
     }
 
     override fun getSubCategory(name:String): MutableList<String>? {
-        return categoryRepository.getSubCategory(name)
+
+        return if(name=="sss"){
+            categoryRepository.getCategory()
+        }else{
+            categoryRepository.getSubCategory(name)
+        }
+
     }
 
-    override fun getLastCategory(name: String): MutableList<String> {
-        return  categoryRepository.getLastCategory(name)
-    }
 
-    override fun getCategoryEmptyParentId(name: String)=categoryRepository.getCategoryEmptyParentId(name)
 
 }

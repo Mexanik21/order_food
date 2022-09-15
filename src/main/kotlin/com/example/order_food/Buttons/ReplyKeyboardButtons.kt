@@ -26,14 +26,11 @@ object ReplyKeyboardButtons {
 
     fun myLocation(messageSourceService: MessageSourceService):ReplyKeyboard{
         val location=KeyboardButton(messageSourceService.getMessage(LOCATION_BUTTON))
-        val back=KeyboardButton(messageSourceService.getMessage(BACK_BUTTON))
         location.requestLocation=true
         val row = KeyboardRow()
-        val row1=KeyboardRow()
         row.add(location)
-        row1.add(back)
         board.resizeKeyboard =true
-        board.keyboard= listOf(row,row1)
+        board.keyboard= listOf(row)
 
 
         return board
@@ -106,7 +103,7 @@ object ReplyKeyboardButtons {
 
 
     fun confirm(messageSourceService: MessageSourceService):ReplyKeyboard{
-        val board=ReplyKeyboardMarkup()
+
         val confirm=KeyboardButton(messageSourceService.getMessage(CONFIRMATION_BUTTON))
         val back=KeyboardButton(messageSourceService.getMessage(BACK_BUTTON))
         val row = KeyboardRow()
@@ -118,4 +115,32 @@ object ReplyKeyboardButtons {
 
         return board
     }
+
+    fun settingsKeyboard(messageSourceService: MessageSourceService): ReplyKeyboardMarkup {
+        val confirm=KeyboardButton(messageSourceService.getMessage(CHOOSE_LANGUAGE_BUTTON))
+        val back=KeyboardButton(messageSourceService.getMessage(BACK_BUTTON))
+        val row = KeyboardRow()
+        val row1=KeyboardRow()
+        row.add(confirm)
+        row1.add(back)
+        board.resizeKeyboard =true
+        board.keyboard= listOf(row,row1)
+
+        return board
+    }
+
+    fun chooseLangKeyboard(): ReplyKeyboardMarkup {
+        val uz=KeyboardButton("\uD83C\uDDFA\uD83C\uDDFF O'zbek")
+        val ru=KeyboardButton("\uD83C\uDDF7\uD83C\uDDFA Русский")
+        val row = KeyboardRow()
+
+        row.add(uz)
+        row.add(ru)
+
+        board.resizeKeyboard =true
+        board.keyboard= listOf(row)
+
+        return board
+    }
+
 }
