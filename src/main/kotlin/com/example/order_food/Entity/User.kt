@@ -39,7 +39,7 @@ class User(
 
 
     ) : BaseEntity(),UserDetails {
-    override fun getUsername(): String = username!!
+    override fun getUsername(): String? = username
     fun setUsername(username: String){
         this.username = username
     }

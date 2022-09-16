@@ -51,6 +51,7 @@ class OrderServiceImpl(
             dto.apply {
                 address.let { order!!.address = it }
                 phoneNumber.let { order!!.phoneNumber = it }
+                status.let { order!!.status = it }
             }
             order = orderRepository.save(order)
            return ResponseEntity.status(200).body(ResponseObj("Success", 200, true, OrderResponseDto.toDto(order)))

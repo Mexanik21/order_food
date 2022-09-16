@@ -26,7 +26,7 @@ data class UserUpdateDto(
 
 data class UserResponseDto(
     var userId: Long,
-    var username: String,
+    var username: String?,
     var fullName: String?,
     var phoneNumber: String?,
     var role: Role
@@ -40,7 +40,7 @@ data class UserResponseDto(
 
 data class UserDto(
     val id:Long,
-    val username: String,
+    val username: String?,
     val role: Set<Role>,
     val active:Boolean
 ) {

@@ -85,7 +85,6 @@ class UserServiceImpl(
         val u = userRepository.findById(user.id!!).orElseThrow { Exception("") }
         user.lang.let { u.lang = it }
         user.cache.let { u.cache = it }
-        user.username.let { u.username = it }
         user.fullName.let { u.fullName = it }
         user.password.let { u.password = it }
         return userRepository.save(user)
