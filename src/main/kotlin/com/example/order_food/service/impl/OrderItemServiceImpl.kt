@@ -20,7 +20,7 @@ class OrderItemServiceImpl(
 ) : OrderItemService {
     override fun create(dto: OrderItemCreateDto) {
        val order= orderRepository.findById(dto.orderId).orElseThrow{Exception()}
-      val food=  foodRepository.findById(dto.foodId).orElseThrow{Exception()}
+       val food=  foodRepository.findById(dto.foodId).orElseThrow{Exception()}
 
         if(orderItemRepository.existsByOrderAndFood(order,food)){
 

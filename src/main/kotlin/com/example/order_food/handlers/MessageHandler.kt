@@ -7,12 +7,16 @@ import com.example.order_food.controllers.MyFeignClient
 import com.example.order_food.dtos.AddressCreateDto
 import com.example.order_food.dtos.OrderCreateDto
 import com.example.order_food.dtos.OrderItemCreateDto
+import com.example.order_food.dtos.OrderUpdateDto
 import com.example.order_food.enums.Language.RU
 import com.example.order_food.enums.Language.UZ
 import com.example.order_food.enums.LocalizationTextKey.*
+import com.example.order_food.enums.OrderStatus
 import com.example.order_food.enums.Step.*
+import com.example.order_food.repository.AddressRepository
 import com.example.order_food.repository.CategoryRepository
 import com.example.order_food.repository.FoodRepository
+import com.example.order_food.repository.OrderRepository
 import com.example.order_food.service.MessageSourceService
 import com.example.order_food.service.impl.*
 import org.springframework.context.i18n.LocaleContextHolder
@@ -36,7 +40,9 @@ class MessageHandler(
     private val telegramConfig: MainBotBot.TelegramConfig,
     private val myFeignClient: MyFeignClient,
     private val addressServiceImpl: AddressServiceImpl,
-    private val foodRepository: FoodRepository
+    private val foodRepository: FoodRepository,
+    private val orderRepository: OrderRepository,
+    private val addressRepository: AddressRepository
 
     ) {
     fun handle(sender: AbsSender, message: Message) {
@@ -92,20 +98,16 @@ class MessageHandler(
 
                 messageSourceService.getMessage(CONFIRMATION_BUTTON) -> {
                    if(step==S_CONFIRMATION_BUTTON){
+                       val address=addressServiceImpl.getOne(user.id!!)
                        sendMessage.chatId = telegramConfig.chanel
-                       sendMessage.text = orderInfo(
-                           user,
-                           orderItemServiceImpl.getOrderItems(user.id!!),
-                           addressServiceImpl.getOne(user.id!!).address
-                       )
-
-                       val a  = sender.execute(sendMessage).messageId
-
-                       val sendLocation = SendLocation(telegramConfig.chanel,41.317648,69.230585)
-                       sendLocation.replyToMessageId=a
+                       sendMessage.text = orderInfo(user, orderItemServiceImpl.getOrderItems(user.id!!), address.address)
+                       val lastMessageId= sender.execute(sendMessage).messageId
+                       val sendLocation = SendLocation(telegramConfig.chanel,address.latitide.toDouble(),address.longitude.toDouble())
+                       sendLocation.replyToMessageId=lastMessageId
                        sender.execute(sendLocation)
 
-                       sendMessage.text = "Buyurtmangiz qabul qilindi tez orada yetqazib beramiz"
+                       sendMessage.chatId=chatId
+                       sendMessage.text = messageSourceService.getMessage(CONFIRMATION_BUTTON_MESSAGE)
                        sendMessage.replyMarkup = ReplyKeyboardButtons.menuKeyboard(
                            arrayOf(
                                messageSourceService.getMessage(ORDER_BUTTON),
@@ -121,11 +123,21 @@ class MessageHandler(
                            ),
 
                            )
+                      val order=orderRepository.lastStatusFindByUserId(user.id!!)
+                       orderServiceImpl.update(order.id!!, OrderUpdateDto(address,OrderStatus.START))
+
+                       orderServiceImpl.create(OrderCreateDto(user.id!!.toLong(), user.phoneNumber!!))
+
+
+
+                       sender.execute(sendMessage)
+
+                     
 
                        user.step = MENU
                        user.cache=null
                        userServiceImpl.update(user)
-                       sender.execute(sendMessage)
+
 
 
 
@@ -287,7 +299,7 @@ class MessageHandler(
                                 }
                                 else if(foodServiceImpl.existsByName(cache)){
                                     when(text){
-                                        "1","2","3","4","5","6","7","8","9" ->{ orderItemServiceImpl.create(OrderItemCreateDto(orderServiceImpl.OrderdfidnByUserId(user.id!!).id!!, foodServiceImpl.findByName(cache).id!!, text.toInt()))
+                                        "1","2","3","4","5","6","7","8","9" ->{ orderItemServiceImpl.create(OrderItemCreateDto(orderServiceImpl.orderfindByUserId(user.id!!).id!!, foodServiceImpl.findByName(cache).id!!, text.toInt()))
                                             sendMessage.text =messageSourceService.getMessage(CHOOSE_QUANTITY_MESSAGE)
                                             sendMessage.replyMarkup = ReplyKeyboardButtons.categoryKeyboard(
                                                 categoryServiceImpl.getCategory(), messageSourceService)
@@ -321,8 +333,6 @@ class MessageHandler(
 
                                 }
                                 messageSourceService.getMessage(BACK_BUTTON) -> {
-                                    if (lang == UZ) { LocaleContextHolder.setLocale(Locale(UZ.code)) }
-                                    else if (lang == RU) { LocaleContextHolder.setLocale(Locale(RU.code)) }
                                     sendMessage.text = messageSourceService.getMessage(INPUT_MENU_MESSAGE)
                                     sendMessage.replyMarkup = ReplyKeyboardButtons.menuKeyboard(
                                         arrayOf(messageSourceService.getMessage(ORDER_BUTTON)),
@@ -430,6 +440,7 @@ class MessageHandler(
                 user = userServiceImpl.update(user)
                 val geocode = "${message.location.longitude},${message.location.latitude}"
                 val location = myFeignClient.getLocationInfo(geocode,"1",lang.toString()).response.geoObjectCollection.featureMember
+                println(myFeignClient.getLocationInfo(geocode, "1", lang.toString()).toString())
                 location.map {
                     sendMessage.text = orderInfo(
                         user,

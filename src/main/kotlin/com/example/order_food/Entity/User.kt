@@ -40,7 +40,7 @@ class User(
 
 
     ) : BaseEntity(),UserDetails {
-    override fun getUsername(): String = username!!
+    override fun getUsername(): String? = username
     override fun getPassword(): String = password!!
     override fun isEnabled(): Boolean = isEnabled!!
     override fun isCredentialsNonExpired(): Boolean = isCredentialsNonExpired!!

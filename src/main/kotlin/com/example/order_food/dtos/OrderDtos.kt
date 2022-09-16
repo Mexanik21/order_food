@@ -12,10 +12,8 @@ data class OrderCreateDto(
 )
 
 data class OrderUpdateDto(
-    var userId: Long,
-    var address: Address,
-    var phoneNumber: String,
-    var status: OrderStatus
+    var address: Address?,
+    var status: OrderStatus?
 )
 
 data class OrderResponseDto(

@@ -15,9 +15,9 @@ data class FileUpdateDto(
 )
 
 data class FileResponseDto(
-    var hashId:String,
+    var hashId:String?,
     var mimeType:String,
-    var path:String
+    var path:String?
 ) {
     companion object{
         fun toDto(f: File) = f.run {

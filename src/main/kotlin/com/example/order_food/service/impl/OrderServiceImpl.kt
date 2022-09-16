@@ -32,10 +32,8 @@ class OrderServiceImpl(
         val order = orderRepository.findById(id).orElseThrow{Exception("Order not found this id = $id")}
 
         dto.apply {
-
-           userId.let { order.user = userRepository.findById(userId).orElseThrow{Exception()} }
-           address.let { order.address = it }
-           phoneNumber.let { order.phoneNumber = it }
+           address?.let { order.address = it }
+           status?.let { order.status = it }
         }
         orderRepository.save(order)
     }
@@ -44,7 +42,7 @@ class OrderServiceImpl(
         orderRepository.deleteById(id)
     }
 
-    override fun OrderdfidnByUserId(id: Long)=orderRepository.OrderdfidnByUserId(id)
+    override fun orderfindByUserId(id: Long)=orderRepository.lastStatusFindByUserId(id)
 
 
 }

@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query
 
 interface AddressRepository:BaseRepository<Address> {
 
-    @Query("select a from Address a where a.user.id = ?1")
-    fun findByUserId(userId: Long):Address
+
+    @Query("select a.* from address a where a.user_id=:id order by  a.created_date desc limit 1", nativeQuery = true)
+    fun lastAfindByUserId(id: Long):Address
 }

@@ -12,5 +12,5 @@ interface OrderService {
     fun getAll(): List<OrderResponseDto>
     fun update(id: Long, dto: OrderUpdateDto)
     fun delete(id: Long)
-    fun OrderdfidnByUserId(id: Long): Order
+    fun orderfindByUserId(id: Long): Order
 }

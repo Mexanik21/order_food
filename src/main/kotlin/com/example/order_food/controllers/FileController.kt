@@ -4,6 +4,7 @@ import com.example.order_food.dtos.FileCreateDto
 import com.example.order_food.dtos.FileUpdateDto
 import com.example.order_food.service.FileService
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartHttpServletRequest
 
 
 @RestController
@@ -12,8 +13,7 @@ class FileController(
     private val fileService: FileService
 ) {
 
-    @PostMapping
-    fun create(@RequestBody dto: FileCreateDto) = fileService.create(dto)
+
 
     @GetMapping("{id}")
     fun getOne(@RequestParam id: Long) = fileService.getOne(id)
@@ -27,6 +27,10 @@ class FileController(
     @DeleteMapping("{id}")
     fun delete(@RequestParam id: Long) = fileService.delete(id)
 
+    @PostMapping("create")
+    fun create(request: MultipartHttpServletRequest){
+        fileService.fileUpload(request)
+    }
 
 
 }

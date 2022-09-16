@@ -23,7 +23,7 @@ class SecurityConfiguration(
             .headers().defaultsDisabled().cacheControl()
         http.cors().and().csrf().disable()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
-            .antMatchers("/auth/*","/user").permitAll()
+            .antMatchers("/auth/*","/user","/file/**").permitAll()
             .anyRequest().authenticated()
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter::class.java)
         return http.build()

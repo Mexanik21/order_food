@@ -28,9 +28,8 @@ class AddressServiceImpl(
        }
     }
 
-    override fun getOne(id: Long) = AddressResponseDto.toDto(
-        addressRepository.findByUserId(id)
-    )
+    override fun getOne(id: Long) = addressRepository.lastAfindByUserId(id)
+
 
     override fun getAll() = addressRepository.findAll().map{
         AddressResponseDto.toDto(it)

@@ -100,12 +100,12 @@ data class Locality(
     @JsonProperty("LocalityName")
   val  localityName:String,
     @JsonProperty("Thoroughfare")
-  val thoroughfare:Thoroughfare
+  val thoroughfare:Thoroughfare?=null
 )
 
 data class Thoroughfare(
     @JsonProperty("ThoroughfareName")
-    val thoroughfareName:String,
+    val thoroughfareName:String?=null,
     @JsonProperty("Premise")
     val premise:Premise?=null,
 )

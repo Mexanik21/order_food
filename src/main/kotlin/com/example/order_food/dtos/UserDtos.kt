@@ -30,7 +30,7 @@ data class UserResponseDto(
     var role: Role,
     var step: Step,
     var  lang: Language,
-    var username: String,
+    var username: String?,
     var fullName: String,
     var phoneNumber: String,
 ) {
@@ -43,7 +43,7 @@ data class UserResponseDto(
 
 data class UserDto(
     val id:Long,
-    val username: String,
+    val username: String?,
     val role: Set<Role>,
     val active:Boolean
 ) {

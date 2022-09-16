@@ -6,10 +6,10 @@ import org.springframework.data.jpa.repository.Query
 interface OrderRepository : BaseRepository<Order> {
 
 
-    @Query("select b.* from buyurtma b where b.user_id=:id", nativeQuery = true)
-    fun OrderdfidnByUserId(id: Long): Order
 
 
 
+    @Query("select b.* from buyurtma b where b.user_id=:id and b.status is null", nativeQuery = true)
+    fun lastStatusFindByUserId(id:Long):Order
 
 }
