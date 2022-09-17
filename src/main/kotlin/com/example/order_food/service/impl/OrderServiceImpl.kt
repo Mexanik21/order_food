@@ -50,7 +50,6 @@ class OrderServiceImpl(
         if (order != null){
             dto.apply {
                 address.let { order!!.address = it }
-                phoneNumber.let { order!!.phoneNumber = it }
                 status.let { order!!.status = it }
             }
             order = orderRepository.save(order)
@@ -72,7 +71,7 @@ class OrderServiceImpl(
         }
     }
 
-    override fun orderfindByUserId(id: Long)=orderRepository.lastStatusFindByUserId(id)
+    override fun orderfindByUserId(id: Long) = orderRepository.lastStatusFindByUserId(id)
 
 
 }

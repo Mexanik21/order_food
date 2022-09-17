@@ -24,7 +24,7 @@ class FoodServiceImpl(
     override fun createFood(dto: FoodCreateDto): ResponseEntity<*> {
         val category = categoryRepository.findByIdAndDeletedIsFalse(dto.categoryId)
         if (category != null){
-            val food = foodRepository.save(Food(dto.name, dto.price, category,null))
+            val food = foodRepository.save(Food(dto.name, dto.price, dto.description!!, category,null))
             return ResponseEntity.status(200).body(ResponseObj<Any>(
                 "Success",
                 200,

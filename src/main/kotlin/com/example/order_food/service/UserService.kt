@@ -8,17 +8,11 @@ import com.example.order_food.response.ResponseObj
 import org.springframework.http.ResponseEntity
 
 interface UserService {
-    fun getLanguage(chatId: String): Language?
-    fun setLang(chatId: String, lang: Language)
-    fun setStep(chatId: String, step: Step)
-    fun getStep(chatId: String): Step
     fun create(dto: UserCreateDto):ResponseEntity<*>
     fun update(user:User):User
     fun saveUser(telegramId: String): User
     fun getOne(id:Long):ResponseEntity<*>
-
     fun getAll():ResponseEntity<*>
-
     fun delete(id: Long):ResponseEntity<*>
 
 }

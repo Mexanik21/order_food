@@ -7,18 +7,23 @@ import com.example.order_food.controllers.MyFeignClient
 import com.example.order_food.dtos.AddressCreateDto
 import com.example.order_food.dtos.OrderCreateDto
 import com.example.order_food.dtos.OrderItemCreateDto
+import com.example.order_food.dtos.OrderUpdateDto
 import com.example.order_food.enums.Language.RU
 import com.example.order_food.enums.Language.UZ
 import com.example.order_food.enums.LocalizationTextKey.*
+import com.example.order_food.enums.OrderStatus
 import com.example.order_food.enums.Step.*
+import com.example.order_food.repository.AddressRepository
 import com.example.order_food.repository.CategoryRepository
 import com.example.order_food.repository.FoodRepository
+import com.example.order_food.repository.OrderRepository
 import com.example.order_food.service.MessageSourceService
 import com.example.order_food.service.impl.*
 import org.springframework.context.i18n.LocaleContextHolder
 import org.springframework.stereotype.Service
 import org.telegram.telegrambots.meta.api.methods.send.SendLocation
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto
 import org.telegram.telegrambots.meta.api.objects.Message
 import org.telegram.telegrambots.meta.bots.AbsSender
 import java.util.*
@@ -32,12 +37,13 @@ class MessageHandler(
     private val foodServiceImpl: FoodServiceImpl,
     private val orderServiceImpl: OrderServiceImpl,
     private val orderItemServiceImpl: OrderItemServiceImpl,
-   private val categoryRepository: CategoryRepository,
+    private val categoryRepository: CategoryRepository,
     private val telegramConfig: MainBotBot.TelegramConfig,
     private val myFeignClient: MyFeignClient,
     private val addressServiceImpl: AddressServiceImpl,
     private val foodRepository: FoodRepository,
     private val orderRepository: OrderRepository,
+    private val fileServiceImpl: FileServiceImpl,
     private val addressRepository: AddressRepository
 
     ) {
@@ -52,6 +58,8 @@ class MessageHandler(
         val sendMessage = SendMessage()
         sendMessage.enableHtml(true)
         sendMessage.chatId = chatId
+        if (lang == UZ) { LocaleContextHolder.setLocale(Locale(UZ.code)) }
+        else if (lang == RU) { LocaleContextHolder.setLocale(Locale(RU.code)) }
 
         if (message.hasText()) {
             when (text) {
@@ -71,9 +79,6 @@ class MessageHandler(
                         S_SETTINGS_BUTTON,
                         SEND_LOCATION,
                         S_CONFIRMATION_BUTTON -> {
-
-                            if (lang == UZ) { LocaleContextHolder.setLocale(Locale(UZ.code)) }
-                            else if (lang == RU) { LocaleContextHolder.setLocale(Locale(RU.code)) }
 
                             sendMessage.text = messageSourceService.getMessage(INPUT_MENU_MESSAGE)
                             sendMessage.replyMarkup = ReplyKeyboardButtons.menuKeyboard(
@@ -102,6 +107,7 @@ class MessageHandler(
                        sendLocation.replyToMessageId=lastMessageId
                        sender.execute(sendLocation)
 
+
                        sendMessage.chatId=chatId
                        sendMessage.text = messageSourceService.getMessage(CONFIRMATION_BUTTON_MESSAGE)
                        sendMessage.replyMarkup = ReplyKeyboardButtons.menuKeyboard(
@@ -120,7 +126,7 @@ class MessageHandler(
 
                            )
                       val order=orderRepository.lastStatusFindByUserId(user.id!!)
-                       orderServiceImpl.update(order.id!!, OrderUpdateDto(address,OrderStatus.START))
+                       orderServiceImpl.update(order.id!!, OrderUpdateDto(address, OrderStatus.START))
 
                        orderServiceImpl.create(OrderCreateDto(user.id!!.toLong(), user.phoneNumber!!))
 
@@ -141,20 +147,10 @@ class MessageHandler(
                    }
 
                 }
-                messageSourceService.getMessage(BACK_BUTTON)->{
-                       if(step==S_CONFIRMATION_BUTTON){
-                        sendMessage.text=messageSourceService.getMessage(ORDER_BUTTON_MESSAGE)
-                        sendMessage.replyMarkup = ReplyKeyboardButtons.categoryKeyboard(
-                            categoryServiceImpl.getCategory(),
-                            messageSourceService
-                        )
-                        sender.execute(sendMessage)
-                        user.cache = "sss"
-                        user.step = S_ORDER_BUTTON
-                        userServiceImpl.update(user)
-                    }
 
-                }
+
+
+
                 else -> {
                     when (step) {
                         MENU -> {
@@ -253,9 +249,15 @@ class MessageHandler(
 
                             }
                             else if (text == messageSourceService.getMessage(PANNIER_BUTTON)) {
-                                sendMessage.text= pannierBody(orderItemServiceImpl.getOrderItems(user.id!!))
-                                sendMessage.replyMarkup = InlineKeyboardButtons.pannierInlineKeyboard(foodServiceImpl, orderItemServiceImpl.getOrderItems(user.id!!),messageSourceService)
-                                sender.execute(sendMessage)
+                                if(orderItemServiceImpl.getOrderItems(user.id!!).isEmpty()){
+                                    sendMessage.text = "Savat bo'sh, Iltimos buyurtmani davom enttiring!"
+                                    sender.execute(sendMessage)
+                                } else {
+                                    sendMessage.text= pannierBody(orderItemServiceImpl.getOrderItems(user.id!!))
+                                    sendMessage.replyMarkup = InlineKeyboardButtons.pannierInlineKeyboard(foodServiceImpl, orderItemServiceImpl.getOrderItems(user.id!!),messageSourceService)
+                                    sender.execute(sendMessage)
+                                }
+
                             }
                             else {
                                 if (existsTextInCacheList(text, categoryServiceImpl.getSubCategory(cache!!))) {
@@ -282,7 +284,15 @@ class MessageHandler(
 
                                 }
                                 else if(existsTextInCacheList(text,foodServiceImpl.getFoods(cache))){
-                                    sendMessage.text = text
+                                    val food=foodServiceImpl.findByName(text)
+
+                                  val sendPhoto=SendPhoto()
+                                    sendPhoto.chatId=chatId
+                                    sendPhoto.caption=descriptionFood(food)
+                                    sendPhoto.photo=fileServiceImpl.getFile(food.file!!.id!!)
+                                    sender.execute(sendPhoto)
+
+                                    sendMessage.text = "Miqdorini tanlang yoki kiriting"
                                     user.cache = text
                                     userServiceImpl.update(user)
                                     sendMessage.replyMarkup = ReplyKeyboardButtons.countFoodCategory(
@@ -295,7 +305,9 @@ class MessageHandler(
                                 }
                                 else if(foodServiceImpl.existsByName(cache)){
                                     when(text){
-                                        "1","2","3","4","5","6","7","8","9" ->{ orderItemServiceImpl.create(OrderItemCreateDto(orderServiceImpl.orderfindByUserId(user.id!!).id!!, foodServiceImpl.findByName(cache).id!!, text.toInt()))
+                                        "1","2","3","4","5","6","7","8","9" ->{
+
+                                            orderItemServiceImpl.create(OrderItemCreateDto(orderServiceImpl.orderfindByUserId(user.id!!).id!!, foodServiceImpl.findByName(cache).id!!, text.toInt()))
                                             sendMessage.text =messageSourceService.getMessage(CHOOSE_QUANTITY_MESSAGE)
                                             sendMessage.replyMarkup = ReplyKeyboardButtons.categoryKeyboard(
                                                 categoryServiceImpl.getCategory(), messageSourceService)
@@ -318,6 +330,19 @@ class MessageHandler(
                             }
 
                         }
+                        S_CONFIRMATION_BUTTON->{
+                            if(text==messageSourceService.getMessage(BACK_BUTTON)) {
+                                sendMessage.text = messageSourceService.getMessage(ORDER_BUTTON_MESSAGE)
+                                sendMessage.replyMarkup = ReplyKeyboardButtons.categoryKeyboard(
+                                    categoryServiceImpl.getCategory(),
+                                    messageSourceService
+                                )
+                                sender.execute(sendMessage)
+                                user.cache = "sss"
+                                user.step = S_ORDER_BUTTON
+                                userServiceImpl.update(user)
+                            }
+                        }
                         S_ADD_LOCATION_BUTTON -> {}
                         S_SETTINGS_BUTTON -> {
                             when (text) {
@@ -329,8 +354,7 @@ class MessageHandler(
 
                                 }
                                 messageSourceService.getMessage(BACK_BUTTON) -> {
-                                    if (lang == UZ) { LocaleContextHolder.setLocale(Locale(UZ.code)) }
-                                    else if (lang == RU) { LocaleContextHolder.setLocale(Locale(RU.code)) }
+
                                     sendMessage.text = messageSourceService.getMessage(INPUT_MENU_MESSAGE)
                                     sendMessage.replyMarkup = ReplyKeyboardButtons.menuKeyboard(
                                         arrayOf(messageSourceService.getMessage(ORDER_BUTTON)),

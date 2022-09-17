@@ -8,6 +8,7 @@ import javax.persistence.OneToOne
 class Food(
     var name: String,
     var price: Long,
+    var description:String,
     @ManyToOne
     var category: Category,
     var status: Boolean?=null,

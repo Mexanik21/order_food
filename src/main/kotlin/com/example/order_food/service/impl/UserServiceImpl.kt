@@ -34,23 +34,6 @@ class UserServiceImpl(
     }
 
 
-    override fun getLanguage(chatId: String): Language? {
-        val user = userRepository.findByTelegramId(chatId)
-        return user.lang
-    }
-
-    override fun setLang(chatId: String, lang: Language) {
-        val user = userRepository.findByTelegramId(chatId)
-        user.lang = lang
-        userRepository.save(user)
-    }
-
-    override fun getStep(chatId: String): Step {
-        val user = userRepository.findByTelegramId(chatId)
-        return user.step!!
-
-    }
-
     override fun create(dto: UserCreateDto): ResponseEntity<*> {
         val responseObj: ResponseObj<Any> = ResponseObj("null", 200, false)
         if (userRepository.existsByUsername(dto.username)) {
@@ -86,7 +69,6 @@ class UserServiceImpl(
         user.lang.let { u.lang = it }
         user.cache.let { u.cache = it }
         user.fullName.let { u.fullName = it }
-        user.password.let { u.password = it }
         return userRepository.save(user)
     }
 
@@ -125,11 +107,6 @@ class UserServiceImpl(
     }
 
 
-    override fun setStep(chatId: String, step: Step) {
-        val user = userRepository.findByTelegramId(chatId)
-        user.step = step
-        userRepository.save(user)
-    }
 
 
 }

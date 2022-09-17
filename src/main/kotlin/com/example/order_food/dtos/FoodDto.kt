@@ -9,6 +9,7 @@ import javax.persistence.OneToOne
 data class FoodCreateDto(
     var name: String,
     var price: Long,
+    var description: String?,
     var categoryId: Long,
     var fileId: Long
 )

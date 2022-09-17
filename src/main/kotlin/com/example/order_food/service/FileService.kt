@@ -5,6 +5,7 @@ import org.springframework.core.io.FileUrlResource
 import org.springframework.util.FileCopyUtils
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.multipart.MultipartHttpServletRequest
+import org.telegram.telegrambots.meta.api.objects.InputFile
 import java.io.FileInputStream
 import javax.servlet.http.HttpServletResponse
 
@@ -16,6 +17,6 @@ interface FileService {
     fun delete(id: Long)
     fun fileUpload(request: MultipartHttpServletRequest)
 
-    fun getFile(id: Long): FileUrlResource
+    fun getFile(id: Long): InputFile
 
 }

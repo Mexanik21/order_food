@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service
 import org.springframework.util.FileCopyUtils
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.multipart.MultipartHttpServletRequest
+import org.telegram.telegrambots.meta.api.objects.InputFile
 import java.io.FileInputStream
 import java.nio.file.Files
 import javax.servlet.http.HttpServletResponse
@@ -63,10 +64,11 @@ class FileServiceImpl(
 
     }
 
-    override fun getFile(id: Long): FileUrlResource {
-        val file = fileRepository.findById(id)
-        val o = FileUrlResource(file.get().path!!)
-        return o
+    override fun getFile(id: Long): InputFile {
+        val fileDb = fileRepository.findById(id).get()
+
+
+        return InputFile(FileInputStream(folder2+"/"+getFileName(fileDb.path!!)),getFileName(fileDb.path!!))
     }
 
 

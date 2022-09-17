@@ -13,5 +13,5 @@ interface OrderService {
     fun getAll(): ResponseEntity<*>
     fun update(id: Long, dto: OrderUpdateDto):ResponseEntity<*>
     fun delete(id: Long):ResponseEntity<*>
-    fun OrderdfidnByUserId(id: Long): Order
+    fun orderfindByUserId(id: Long): Order
 }

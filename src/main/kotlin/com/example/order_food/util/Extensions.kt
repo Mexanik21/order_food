@@ -1,7 +1,11 @@
 package com.example.order_food
 
+import com.example.order_food.Entity.Food
 import com.example.order_food.Entity.OrderItem
 import com.example.order_food.Entity.User
+import com.example.order_food.enums.CallbackType
+import com.example.order_food.repository.OrderItemRepository
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery
 import org.telegram.telegrambots.meta.api.objects.Update
 
 fun Update.getTelegramId() = this.run {
@@ -49,6 +53,16 @@ fun orderInfo(user: User, orderItemList: MutableList<OrderItem>, address: String
 
 }
 
+fun descriptionFood(food: Food):String{
+ val description=StringBuilder()
+    description.append("\n${food.name}\n")
+    description.append("\nNarxi : ${food.price}\n\n")
+    description.append(food.description)
+    description.append("\n\n")
+    return description.toString()
+
+}
+
 
 fun existsTextInCacheList(text: String, cacheList: MutableList<String>?): Boolean {
 
@@ -64,6 +78,14 @@ fun existsTextInCacheList(text: String, cacheList: MutableList<String>?): Boolea
     }
 
     return false
+}
+
+fun addOrderItems(name:String, orderItemRepository: OrderItemRepository){
+
+
+
+
+
 }
 
 

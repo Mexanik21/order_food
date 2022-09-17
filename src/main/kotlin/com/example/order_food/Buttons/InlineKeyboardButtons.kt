@@ -28,17 +28,18 @@ object InlineKeyboardButtons {
         foodServiceImpl: FoodServiceImpl,
         getOrderItemsList:MutableList<OrderItem>,
         messageSourceService: MessageSourceService
-    ): ReplyKeyboard {
+    ): InlineKeyboardMarkup {
         val line = arrayListOf<List<InlineKeyboardButton>>()
         for (i in getOrderItemsList) {
             val foodName = InlineKeyboardButton(foodServiceImpl.nameFindById(i.food.id!!))
-            foodName.callbackData="332"
+            foodName.callbackData= i.food.name
             val add = InlineKeyboardButton("+")
-            add.callbackData = "$ADD"
+            add.callbackData = "+|${i.id}"
             val reduce = InlineKeyboardButton("-")
-            reduce.callbackData = "$REDUCE"
+            reduce.callbackData = "-|${i.id}"
             val clear = InlineKeyboardButton("x")
-            clear.callbackData = "$CLEAR"
+            clear.callbackData="x|${i.id}"
+
 
 
             line.add((getRow(foodName, add, reduce, clear)))
