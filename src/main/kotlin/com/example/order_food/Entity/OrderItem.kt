@@ -11,6 +11,6 @@ class OrderItem (
         var order: Order,
         @OneToOne
         var food: Food,
-         var count:Int
+        var count:Int
 
         ):BaseEntity()

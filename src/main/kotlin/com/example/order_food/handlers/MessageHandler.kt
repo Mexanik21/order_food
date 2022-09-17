@@ -7,16 +7,12 @@ import com.example.order_food.controllers.MyFeignClient
 import com.example.order_food.dtos.AddressCreateDto
 import com.example.order_food.dtos.OrderCreateDto
 import com.example.order_food.dtos.OrderItemCreateDto
-import com.example.order_food.dtos.OrderUpdateDto
 import com.example.order_food.enums.Language.RU
 import com.example.order_food.enums.Language.UZ
 import com.example.order_food.enums.LocalizationTextKey.*
-import com.example.order_food.enums.OrderStatus
 import com.example.order_food.enums.Step.*
-import com.example.order_food.repository.AddressRepository
 import com.example.order_food.repository.CategoryRepository
 import com.example.order_food.repository.FoodRepository
-import com.example.order_food.repository.OrderRepository
 import com.example.order_food.service.MessageSourceService
 import com.example.order_food.service.impl.*
 import org.springframework.context.i18n.LocaleContextHolder
@@ -132,7 +128,7 @@ class MessageHandler(
 
                        sender.execute(sendMessage)
 
-                     
+
 
                        user.step = MENU
                        user.cache=null
@@ -333,6 +329,8 @@ class MessageHandler(
 
                                 }
                                 messageSourceService.getMessage(BACK_BUTTON) -> {
+                                    if (lang == UZ) { LocaleContextHolder.setLocale(Locale(UZ.code)) }
+                                    else if (lang == RU) { LocaleContextHolder.setLocale(Locale(RU.code)) }
                                     sendMessage.text = messageSourceService.getMessage(INPUT_MENU_MESSAGE)
                                     sendMessage.replyMarkup = ReplyKeyboardButtons.menuKeyboard(
                                         arrayOf(messageSourceService.getMessage(ORDER_BUTTON)),
@@ -440,7 +438,6 @@ class MessageHandler(
                 user = userServiceImpl.update(user)
                 val geocode = "${message.location.longitude},${message.location.latitude}"
                 val location = myFeignClient.getLocationInfo(geocode,"1",lang.toString()).response.geoObjectCollection.featureMember
-                println(myFeignClient.getLocationInfo(geocode, "1", lang.toString()).toString())
                 location.map {
                     sendMessage.text = orderInfo(
                         user,

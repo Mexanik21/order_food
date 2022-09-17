@@ -39,6 +39,11 @@ dependencies {
     implementation("org.mapstruct:mapstruct:1.5.2.Final")
     implementation("io.jsonwebtoken:jjwt:0.9.1")
     implementation ("org.springframework.cloud:spring-cloud-starter-openfeign:3.1.4")
+    implementation("com.squareup.okhttp3:okhttp:4.10.0")
+    implementation("org.hashids:hashids:1.0.3")
+    implementation("io.springfox:springfox-swagger2:3.0.0")
+    implementation("io.springfox:springfox-swagger-ui:3.0.0")
+    implementation ("org.springdoc:springdoc-openapi-ui:1.6.11")
     implementation("org.hashids:hashids:1.0.3")
 }
 

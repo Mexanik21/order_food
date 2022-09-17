@@ -8,24 +8,21 @@ import com.example.order_food.dtos.AddressUpdateDto
 import com.example.order_food.dtos.Welcome
 import com.example.order_food.repository.AddressRepository
 import com.example.order_food.repository.UserRepository
+import com.example.order_food.response.ResponseObj
 import com.example.order_food.service.AddressService
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 
 @Service
 class AddressServiceImpl(
     private val addressRepository: AddressRepository,
-    private val userRepository: UserRepository,
+    private val userRepository: UserRepository
+): AddressService {
+    override fun create(dto: AddressCreateDto): AddressResponseDto {
+        val user = userRepository.findByIdAndDeletedIsFalse(dto.userId)
 
-): AddressService{
-    override fun create(dto: AddressCreateDto) {
-       dto.apply {
-           addressRepository.save(Address(
-               userRepository.findById(userId).orElseThrow{Exception("user not found")},
-               address,
-               comment,
-               latitide,
-               longitude))
-       }
+        val address = addressRepository.save(Address(user!!, dto.address, dto.comment, dto.latitide, dto.longitude))
+           return AddressResponseDto.toDto(address)
     }
 
     override fun getOne(id: Long) = addressRepository.lastAfindByUserId(id)

@@ -6,7 +6,7 @@ import com.example.order_food.service.OrderService
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("order")
+@RequestMapping("api/v1/order")
 class OrderController(
     private val orderService: OrderService
 ) {
@@ -15,14 +15,14 @@ class OrderController(
     fun create(@RequestBody dto: OrderCreateDto) = orderService.create(dto)
 
     @GetMapping("{id}")
-    fun getOne(@RequestParam id: Long) = orderService.getOne(id)
+    fun getOne(@PathVariable id: Long) = orderService.getOne(id)
 
     @GetMapping
     fun getAll() = orderService.getAll()
 
-    @PutMapping("{id}")
-    fun update(@RequestParam id: Long, @RequestBody dto: OrderUpdateDto) = orderService.update(id,dto)
+    @PutMapping("update/{id}")
+    fun update(@PathVariable id: Long, @RequestBody dto: OrderUpdateDto) = orderService.update(id,dto)
 
-    @DeleteMapping("{id}")
-    fun delete(@RequestParam id: Long) = orderService.delete(id)
+    @DeleteMapping("delete/{id}")
+    fun delete(@PathVariable id: Long) = orderService.delete(id)
 }

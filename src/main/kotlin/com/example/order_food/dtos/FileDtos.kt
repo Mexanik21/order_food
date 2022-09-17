@@ -3,9 +3,7 @@ package com.example.order_food.dtos
 import com.example.order_food.Entity.File
 
 data class FileCreateDto(
-    var hashId:String,
-    var mimeType:String,
-    var path:String
+    var foodId:Long
 )
 
 data class FileUpdateDto(
@@ -21,7 +19,7 @@ data class FileResponseDto(
 ) {
     companion object{
         fun toDto(f: File) = f.run {
-            FileResponseDto(hashId, mimeType, path)
+            FileResponseDto(hashId!!, mimeType, path!!)
         }
     }
 }

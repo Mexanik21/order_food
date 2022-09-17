@@ -23,7 +23,7 @@ class SecurityConfiguration(
             .headers().defaultsDisabled().cacheControl()
         http.cors().and().csrf().disable()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
-            .antMatchers("/auth/*","/user","/file/**").permitAll()
+            .antMatchers("/api/v1/auth/**","/api/v1/user/**","/api/v1/file/**","/swagger-ui/**","/swagger-resources/**","/v3/api-docs/**", "/webjars/**").permitAll()
             .anyRequest().authenticated()
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter::class.java)
         return http.build()

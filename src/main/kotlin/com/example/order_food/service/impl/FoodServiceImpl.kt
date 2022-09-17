@@ -1,16 +1,15 @@
 package com.example.order_food.service.impl
 
-import com.example.order_food.Entity.Category
 import com.example.order_food.Entity.Food
-import com.example.order_food.dtos.CategoryCreateDto
 import com.example.order_food.dtos.FoodCreateDto
 import com.example.order_food.dtos.FoodResponseDto
 import com.example.order_food.dtos.FoodUpdateDto
 import com.example.order_food.repository.CategoryRepository
 import com.example.order_food.repository.FileRepository
 import com.example.order_food.repository.FoodRepository
-import com.example.order_food.service.CategoryService
+import com.example.order_food.response.ResponseObj
 import com.example.order_food.service.FoodService
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 
 
@@ -22,38 +21,78 @@ class FoodServiceImpl(
 ) : FoodService {
 
 
-    override fun createFood(dto: FoodCreateDto) {
-        val category = categoryRepository.findById(dto.categoryId)
-            .orElseThrow { Exception("food not found by id: ${dto.categoryId}") }
-        foodRepository.save(Food(dto.name, dto.price, category))
+    override fun createFood(dto: FoodCreateDto): ResponseEntity<*> {
+        val category = categoryRepository.findByIdAndDeletedIsFalse(dto.categoryId)
+        if (category != null){
+            val food = foodRepository.save(Food(dto.name, dto.price, category,null))
+            return ResponseEntity.status(200).body(ResponseObj<Any>(
+                "Success",
+                200,
+                true,
+                food
+            ))
+        } else {
+            return ResponseEntity.status(404).body(ResponseObj<Any>(
+                "Category not found",
+                404,
+                false,
+                null
+            ))
+        }
+
     }
     override fun getFoods(categoryName: String): MutableList<String>? {
         return foodRepository.getFoods(categoryName)
     }
 
-    override fun getOne(id: Long) = FoodResponseDto.toDto(
-        foodRepository.findById(id).orElseThrow { Exception("Food not found $id") }
-    )
+    override fun getOne(id: Long):ResponseEntity<*> {
 
-    override fun getAll() = foodRepository.findAll().map { FoodResponseDto.toDto(it) }
-
-    override fun update(id: Long, dto: FoodUpdateDto) {
-        var food = foodRepository.findById(id).orElseThrow {
-            Exception("Food not found $id")
-
+        val food = foodRepository.findByIdAndDeletedIsFalse(id)
+        return if (food != null){
+            ResponseEntity.status(200).body(ResponseObj("Success", 200, true, food))
+        } else {
+            ResponseEntity.status(404).body(ResponseObj("Food not found $id", 404, false, null))
         }
-        dto.apply {
-            name.let { food.name = it }
-            price.let { food.price = it }
-            category.let { food.category = it }
-            status.let { food.status  = it }
-            fileId.let { food.file = fileRepository.findById(fileId).orElseThrow{Exception()} }
-        }
-        foodRepository.save(food)
+
+
     }
 
-    override fun delete(id: Long) {
-        foodRepository.deleteById(id)
+    override fun getAll():ResponseEntity<*> {
+        val foods = foodRepository.findAllByDeletedIsFalse()
+        return if (foods.isNotEmpty()){
+            ResponseEntity.status(200).body(ResponseObj("Success", 200, true, foods.map{ FoodResponseDto.toDto(it) }))
+        } else {
+            ResponseEntity.status(404).body(ResponseObj("Foods empty", 404, false, null))
+        }
+    }
+
+    override fun update(id: Long, dto: FoodUpdateDto):ResponseEntity<*> {
+        var food = foodRepository.findByIdAndDeletedIsFalse(id)
+        if (food != null){
+            dto.apply {
+                name.let { food.name = it }
+                price.let { food.price = it }
+                category.let { food.category = it }
+                status.let { food.status  = it }
+                fileId.let { food.file = fileRepository.findById(fileId).orElseThrow{Exception()} }
+            }
+            return ResponseEntity.status(200).body(ResponseObj("Success", 200, true, FoodResponseDto.toDto(foodRepository.save(food))))
+        } else {
+            return ResponseEntity.status(404).body(ResponseObj("Food not found $id", 404, false, null))
+        }
+
+    }
+
+    override fun delete(id: Long):ResponseEntity<*> {
+        val food = foodRepository.findByIdAndDeletedIsFalse(id)
+         if (food != null){
+            food.deleted = true
+            foodRepository.save(food)
+            return ResponseEntity.status(200).body(ResponseObj("Success", 200, true, null))
+        } else {
+            return ResponseEntity.status(404).body(ResponseObj("Food not found $id", 404, false, null))
+        }
+
     }
 
     override fun findByName(name: String)=foodRepository.findByName(name)
