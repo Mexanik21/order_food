@@ -13,9 +13,11 @@ class CategoryController(
     @PostMapping("create")
     fun create(@RequestBody dto: CategoryCreateDto) = categoryService.createCategory(dto)
 
+    // get sub category
     @GetMapping("{id}")
     fun getSub(@PathVariable id:Long) = categoryService.getSub(id)
 
+    // Get Head category
     @GetMapping()
     fun getHead() = categoryService.getHead()
 

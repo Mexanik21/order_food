@@ -8,8 +8,8 @@ interface FoodService {
 
     fun createFood(dto: FoodCreateDto): ResponseEntity<*>
     fun getFoods(categoryName:String):MutableList<String> ?
-    fun getOne(id: Long): ResponseEntity<*>
     fun getAll(): ResponseEntity<*>
+    fun getFoodCategoryId(id:Long): ResponseEntity<*>
     fun update(id: Long, dto: FoodUpdateDto):ResponseEntity<*>
     fun delete(id: Long):ResponseEntity<*>
    fun  findByName(name: String): Food

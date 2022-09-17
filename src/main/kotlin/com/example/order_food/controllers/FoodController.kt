@@ -3,6 +3,7 @@ package com.example.order_food.controllers
 import com.example.order_food.dtos.FoodCreateDto
 import com.example.order_food.dtos.FoodUpdateDto
 import com.example.order_food.service.FoodService
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -15,11 +16,11 @@ class FoodController(
     @PostMapping("create")
     fun create(@RequestBody dto: FoodCreateDto) = foodService.createFood(dto)
 
-    @GetMapping("{id}")
-    fun getOne(@PathVariable id:Long) = foodService.getOne(id)
+    @GetMapping
+    fun getAll(@PathVariable id:Long) = foodService.getAll()
 
-    @GetMapping()
-    fun getAll() = foodService.getAll()
+    @GetMapping("{id}")
+    fun getFoodsCategoryId(@PathVariable id:Long):ResponseEntity<*> = foodService.getFoodCategoryId(id)
 
     @PutMapping("update/{id}")
     fun update(@PathVariable id: Long, @RequestBody dto:FoodUpdateDto) = foodService.update(id, dto)

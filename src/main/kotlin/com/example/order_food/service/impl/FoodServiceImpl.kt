@@ -29,7 +29,7 @@ class FoodServiceImpl(
                 "Success",
                 200,
                 true,
-                food
+                FoodResponseDto.toDto(food)
             ))
         } else {
             return ResponseEntity.status(404).body(ResponseObj<Any>(
@@ -45,20 +45,20 @@ class FoodServiceImpl(
         return foodRepository.getFoods(categoryName)
     }
 
-    override fun getOne(id: Long):ResponseEntity<*> {
+    override fun getAll():ResponseEntity<*> {
 
-        val food = foodRepository.findByIdAndDeletedIsFalse(id)
-        return if (food != null){
-            ResponseEntity.status(200).body(ResponseObj("Success", 200, true, food))
+        val foods = foodRepository.findByIdAndDeletedIsFalseFoodList()
+        return if (foods.isNotEmpty()){
+            ResponseEntity.status(200).body(ResponseObj("Success", 200, true, foods.map { FoodResponseDto.toDto(it) }))
         } else {
-            ResponseEntity.status(404).body(ResponseObj("Food not found $id", 404, false, null))
+            ResponseEntity.status(200).body(ResponseObj("Foods empty", 404, false, null))
         }
 
 
     }
 
-    override fun getAll():ResponseEntity<*> {
-        val foods = foodRepository.findAllByDeletedIsFalse()
+    override fun getFoodCategoryId(id: Long):ResponseEntity<*> {
+        val foods = foodRepository.getByCategoryId(id)
         return if (foods.isNotEmpty()){
             ResponseEntity.status(200).body(ResponseObj("Success", 200, true, foods.map{ FoodResponseDto.toDto(it) }))
         } else {

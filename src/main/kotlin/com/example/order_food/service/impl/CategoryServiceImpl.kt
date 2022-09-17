@@ -47,7 +47,7 @@ class CategoryServiceImpl (
         return if (categories.isNotEmpty()){
             ResponseEntity.status(200).body(ResponseObj("Success", 200, true,categories.map { CategoryResponseDto.toDto(it) }))
         } else{
-            ResponseEntity.status(404).body(ResponseObj("Category not found $id", 404, false, null))
+            ResponseEntity.status(200).body(ResponseObj("Category not found $id", 404, false, null))
         }
     }
 
@@ -72,7 +72,7 @@ class CategoryServiceImpl (
                  "Success",
                  200,
                  true,
-                 category
+                 CategoryResponseDto.toDto(category)
              ))
         } else {
             if( categoryRepository.findByIdAndDeletedIsFalse(dto.parentId!!) != null){
@@ -82,7 +82,7 @@ class CategoryServiceImpl (
                     "Success",
                     200,
                     true,
-                    category
+                    CategoryResponseDto.toDto(category)
                 ))
             } else {
                 return ResponseEntity.status(404).body(ResponseObj(
